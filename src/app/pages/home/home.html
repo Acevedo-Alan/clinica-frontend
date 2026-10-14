@@ -1,0 +1,53 @@
+@if (auth.usuario(); as u) {
+  <section class="hero hero-sesion">
+    <div class="hero-contenido">
+      <p class="etiqueta">Hola de nuevo</p>
+      <h1>{{ u.nombre }}, ¿qué querés hacer hoy?</h1>
+      <p class="bajada">Elegí una función del menú para empezar.</p>
+    </div>
+  </section>
+
+  <section class="pagina">
+    <div class="atajos">
+      @for (item of menu[u.rol]; track item.ruta) {
+        <a class="atajo" [routerLink]="rutaDe(u.rol, item.ruta)">
+          <span class="atajo-icono"><mat-icon>{{ item.icono }}</mat-icon></span>
+          <span class="atajo-titulo">{{ item.titulo }}</span>
+          <mat-icon class="flecha">arrow_forward</mat-icon>
+        </a>
+      }
+    </div>
+  </section>
+} @else {
+  <section class="hero">
+    <div class="hero-contenido">
+      <p class="etiqueta">Clínica Virtual</p>
+      <h1>Tu salud, a un clic de distancia.</h1>
+      <p class="bajada">
+        Sacá turnos médicos online, seguí tu historial clínico y recibí avisos de tus consultas. Iniciá sesión o
+        registrate para empezar.
+      </p>
+      <div class="acciones">
+        <a mat-flat-button routerLink="/login" class="btn-primario">
+          <mat-icon>login</mat-icon> Iniciar sesión
+        </a>
+        <a mat-stroked-button routerLink="/registro" class="btn-secundario">
+          <mat-icon>person_add</mat-icon> Registrarme
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pagina">
+    <h2 class="titulo-seccion">¿Qué podés hacer como paciente registrado?</h2>
+    <div class="grilla">
+      @for (f of funcionalidades; track f.titulo) {
+        <article class="tarjeta">
+          <span class="tarjeta-icono"><mat-icon>{{ f.icono }}</mat-icon></span>
+          <h3>{{ f.titulo }}</h3>
+          <p>{{ f.texto }}</p>
+        </article>
+      }
+    </div>
+  </section>
+}

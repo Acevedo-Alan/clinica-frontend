@@ -1,0 +1,54 @@
+<div class="pagina pagina-perfil">
+  @if (cargando()) {
+    <div class="centro"><mat-spinner diameter="40" /></div>
+  } @else if (error(); as e) {
+    <div class="aviso-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <span>{{ e }}</span>
+      <button mat-button (click)="cargar()">Reintentar</button>
+    </div>
+  } @else if (datos(); as d) {
+    <mat-card class="tarjeta-perfil" appearance="raised">
+      <div class="cabecera">
+        <div class="avatar" aria-hidden="true">{{ iniciales() }}</div>
+        <div>
+          <h1>{{ d.nombre }} {{ d.apellido }}</h1>
+          <span class="rol"><mat-icon inline>verified_user</mat-icon> {{ etiquetaRol[d.rol] }}</span>
+        </div>
+      </div>
+
+      <mat-divider />
+
+      <dl class="datos">
+        <div>
+          <dt><mat-icon>badge</mat-icon> DNI</dt>
+          <dd>{{ d.dni }}</dd>
+        </div>
+        <div>
+          <dt><mat-icon>mail</mat-icon> Email</dt>
+          <dd>{{ d.email }}</dd>
+        </div>
+        <div>
+          <dt><mat-icon>call</mat-icon> Teléfono</dt>
+          <dd>{{ d.telefono || '—' }}</dd>
+        </div>
+        <div>
+          <dt><mat-icon>cake</mat-icon> Fecha de nacimiento</dt>
+          <dd>{{ formatearFecha(d.fecha_nacimiento) }}</dd>
+        </div>
+        @if (nombreCobertura(); as cob) {
+          <div>
+            <dt><mat-icon>health_and_safety</mat-icon> Cobertura</dt>
+            <dd>{{ cob }}</dd>
+          </div>
+        }
+        @if (d.id_sede != null) {
+          <div>
+            <dt><mat-icon>apartment</mat-icon> Sede asignada</dt>
+            <dd>Sede N.º {{ d.id_sede }}</dd>
+          </div>
+        }
+      </dl>
+    </mat-card>
+  }
+</div>

@@ -1,0 +1,48 @@
+<mat-toolbar class="barra">
+  @if (auth.autenticado()) {
+    <button mat-icon-button class="hamburguesa" aria-label="Abrir o cerrar el menú" (click)="alternarMenu.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
+
+  <a routerLink="/" class="marca" aria-label="Clínica Virtual, ir al inicio">
+    <span class="logo"><mat-icon>medical_services</mat-icon></span>
+    <span class="nombre">Clínica Virtual</span>
+  </a>
+
+  @if (!auth.autenticado()) {
+    <span class="bienvenida">Bienvenido a la clínica virtual</span>
+  }
+
+  <span class="espaciador"></span>
+
+  @if (auth.usuario(); as u) {
+    <button
+      mat-icon-button
+      matTooltip="Las notificaciones estarán disponibles próximamente"
+      aria-label="Notificaciones"
+    >
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    <span class="usuario">
+      <span class="usuario-nombre">{{ u.nombre }} {{ u.apellido }}</span>
+      <button
+        mat-icon-button
+        class="info"
+        [matTooltip]="'Tipo de usuario: ' + etiquetaRol[u.rol]"
+        [attr.aria-label]="'Tipo de usuario: ' + etiquetaRol[u.rol]"
+      >
+        <mat-icon>info</mat-icon>
+      </button>
+    </span>
+
+    <button mat-stroked-button class="salir" (click)="auth.logout()">
+      <mat-icon>logout</mat-icon>
+      <span class="salir-texto">Cerrar sesión</span>
+    </button>
+  } @else {
+    <a mat-button routerLink="/login" class="acceso">Ingresar</a>
+    <a mat-flat-button routerLink="/registro" class="acceso-registro">Registrarme</a>
+  }
+</mat-toolbar>

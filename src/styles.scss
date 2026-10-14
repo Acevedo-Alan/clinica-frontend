@@ -1,0 +1,104 @@
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light;
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: mat.$cyan-palette,
+        tertiary: mat.$azure-palette,
+      ),
+      typography: (
+        plain-family: ('Plus Jakarta Sans Variable', system-ui, sans-serif),
+        brand-family: ('Plus Jakarta Sans Variable', system-ui, sans-serif),
+      ),
+      density: 0,
+    )
+  );
+}
+
+:root {
+  --clinica-radius: 20px;
+  --clinica-gradient: linear-gradient(135deg, #006874 0%, #0b5f9e 100%);
+  --clinica-max: 1120px;
+
+  /* Contenedores más suaves que el cian saturado de la paleta M3 */
+  --mat-sys-primary-container: #cdeef2;
+  --mat-sys-on-primary-container: #00363d;
+  --mat-sys-secondary-container: #d3e8eb;
+  --mat-sys-on-secondary-container: #0c2f34;
+  --mat-sys-tertiary-container: #d6e6fa;
+  --mat-sys-on-tertiary-container: #0a2a47;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font-family: var(--mat-sys-body-large-font, 'Plus Jakarta Sans Variable', system-ui, sans-serif);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Contenedor de página reutilizable */
+.pagina {
+  width: 100%;
+  max-width: var(--clinica-max);
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+.pagina-angosta {
+  max-width: 520px;
+}
+
+/* Aviso de error inline (errores del backend) */
+.aviso-error {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font-size: 0.9rem;
+  line-height: 1.4;
+
+  mat-icon {
+    flex: none;
+  }
+}
+
+.aviso-ok {
+  @extend .aviso-error;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.tarjeta-formulario {
+  border-radius: var(--clinica-radius);
+  padding: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

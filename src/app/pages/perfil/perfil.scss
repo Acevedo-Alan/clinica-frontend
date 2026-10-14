@@ -1,0 +1,90 @@
+.pagina-perfil {
+  max-width: 760px;
+}
+
+.centro {
+  display: grid;
+  place-items: center;
+  padding: 80px 0;
+}
+
+.aviso-error span {
+  flex: 1;
+}
+
+.tarjeta-perfil {
+  border-radius: var(--clinica-radius);
+  overflow: hidden;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px 28px 24px;
+  background: linear-gradient(135deg, var(--mat-sys-primary-container), var(--mat-sys-tertiary-container));
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+    line-height: 1.15;
+  }
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--clinica-gradient);
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.rol {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.7);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 28px;
+
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+
+    mat-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  dd {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+}

@@ -1,0 +1,41 @@
+<footer class="pie">
+  <div class="contenido">
+    <section class="bloque marca-bloque">
+      <p class="titulo"><mat-icon>medical_services</mat-icon> Clínica Virtual</p>
+      <p class="texto">Turnos médicos online, sin filas y sin llamadas.</p>
+    </section>
+
+    <section class="bloque">
+      <h2>Sedes</h2>
+      @for (s of sedes; track s.nombre) {
+        <p class="texto">
+          <strong>{{ s.nombre }}</strong><br />
+          <mat-icon inline>location_on</mat-icon> {{ s.direccion }}<br />
+          <mat-icon inline>call</mat-icon> {{ s.telefono }}
+        </p>
+      }
+    </section>
+
+    <section class="bloque">
+      <h2>Contacto</h2>
+      <p class="texto">
+        <mat-icon inline>mail</mat-icon>
+        <a href="mailto:contacto@clinicavirtual.com.ar">contacto&#64;clinicavirtual.com.ar</a>
+      </p>
+      <p class="texto"><mat-icon inline>call</mat-icon> <a href="tel:+543424000001">342 400-0001</a></p>
+      <h2 class="redes-titulo">Redes sociales</h2>
+      <p class="texto redes">
+        <a href="https://instagram.com/clinicavirtual" target="_blank" rel="noopener">
+          <mat-icon inline>photo_camera</mat-icon> Instagram
+        </a>
+        <a href="https://facebook.com/clinicavirtual" target="_blank" rel="noopener">
+          <mat-icon inline>thumb_up</mat-icon> Facebook
+        </a>
+        <a href="https://x.com/clinicavirtual" target="_blank" rel="noopener">
+          <mat-icon inline>alternate_email</mat-icon> X
+        </a>
+      </p>
+    </section>
+  </div>
+  <p class="legal">© {{ anio }} Clínica Virtual · Santa Fe, Argentina</p>
+</footer>
