@@ -1,0 +1,39 @@
+
+.not-found {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    background: #f4f7fb;
+    text-align: center;
+  }
+  
+  .not-found-content {
+    max-width: 520px;
+  }
+  
+  .error-code {
+    display: block;
+    color: #087f72;
+    font-size: clamp(72px, 15vw, 120px);
+    font-weight: 800;
+    line-height: 1;
+  }
+  
+  h1 {
+    margin: 20px 0 12px;
+    color: #17324d;
+    font-size: 28px;
+  }
+  
+  p {
+    margin-bottom: 28px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+  
+  button {
+    min-height: 44px;
+  }
+  

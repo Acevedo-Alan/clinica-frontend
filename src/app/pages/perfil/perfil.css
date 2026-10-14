@@ -1,0 +1,74 @@
+.perfil-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  .perfil-container h1 {
+    color: #146c5b;
+    margin-bottom: 8px;
+  }
+  
+  .subtitulo {
+    color: #666;
+    margin-bottom: 28px;
+  }
+  
+  .perfil-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  }
+  
+  .perfil-card h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: #263238;
+  }
+  
+  .datos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  
+  .dato {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .etiqueta {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .dato strong {
+    color: #1f2937;
+    overflow-wrap: anywhere;
+  }
+  
+  .mensaje {
+    color: #555;
+  }
+  
+  .error {
+    color: #b42318;
+  }
+  
+  .error button {
+    margin-right: 16px;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 600px) {
+    .datos-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .perfil-card {
+      padding: 20px;
+    }
+  }

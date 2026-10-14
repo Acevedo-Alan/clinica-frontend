@@ -1,0 +1,82 @@
+<section class="perfil-container">
+
+    <h1>Mi perfil</h1>
+    <p class="subtitulo">
+      Consultá tus datos personales registrados en la clínica.
+    </p>
+  
+    @if (cargando()) {
+  
+      <p class="mensaje">Cargando tu perfil...</p>
+  
+    } @else if (errorPerfil()) {
+  
+      <div class="error">
+        <p>{{ errorPerfil() }}</p>
+  
+        <button type="button" (click)="cargarPerfil()">
+          Reintentar
+        </button>
+  
+        <a routerLink="/login">Ir a iniciar sesión</a>
+      </div>
+  
+    } @else if (usuario(); as paciente) {
+  
+      <div class="perfil-card">
+  
+        <h2>Datos personales</h2>
+  
+        <div class="datos-grid">
+  
+          <div class="dato">
+            <span class="etiqueta">Nombre</span>
+            <strong>{{ paciente.nombre }}</strong>
+          </div>
+  
+          <div class="dato">
+            <span class="etiqueta">Apellido</span>
+            <strong>{{ paciente.apellido }}</strong>
+          </div>
+  
+          <div class="dato">
+            <span class="etiqueta">DNI</span>
+            <strong>{{ paciente.dni }}</strong>
+          </div>
+  
+          <div class="dato">
+            <span class="etiqueta">Correo electrónico</span>
+            <strong>{{ paciente.email }}</strong>
+          </div>
+  
+          <div class="dato">
+            <span class="etiqueta">Teléfono</span>
+            <strong>{{ paciente.telefono || 'No informado' }}</strong>
+          </div>
+  
+          <div class="dato">
+            <span class="etiqueta">Fecha de nacimiento</span>
+            <strong>
+              {{ paciente.fecha_nacimiento | date:'dd/MM/yyyy':'UTC' }}
+            </strong>
+          </div>
+  
+          <div class="dato">
+            <span class="etiqueta">Rol</span>
+            <strong>{{ paciente.rol }}</strong>
+          </div>
+  
+          <div class="dato">
+            <span class="etiqueta">Cobertura médica</span>
+            <strong>
+              {{ obtenerNombreCobertura(paciente.id_cobertura) }}
+            </strong>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    }
+  
+  </section>

@@ -1,0 +1,82 @@
+
+<header class="header">
+    <a class="brand" routerLink="/" aria-label="Clínica, inicio">
+      <span class="brand-icon">+</span>
+      <span>Clínica Salud</span>
+    </a>
+  
+    <nav class="navigation" aria-label="Navegación principal">
+  
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        Inicio
+      </a>
+  
+      @if (!autenticado()) {
+  
+        <a routerLink="/login" routerLinkActive="active">
+          Iniciar sesión
+        </a>
+  
+        <a
+          routerLink="/registro"
+          routerLinkActive="active"
+          class="register-link">
+          Registrarse
+        </a>
+  
+      } @else {
+  
+        @if (usuario(); as u) {
+          <span class="user-info">
+            Hola, {{ u.nombre }}
+            <span class="user-role">
+              {{ obtenerNombreRol(u.rol) }}
+            </span>
+          </span>
+  
+          @switch (u.rol) {
+            @case ('paciente') {
+              <a routerLink="/paciente" routerLinkActive="active">
+                Mi panel
+              </a>
+            }
+  
+            @case ('medico') {
+              <a routerLink="/medico" routerLinkActive="active">
+                Mi agenda
+              </a>
+            }
+  
+            @case ('operador') {
+              <a routerLink="/operador" routerLinkActive="active">
+                Gestión
+              </a>
+            }
+  
+            @case ('admin') {
+              <a routerLink="/admin" routerLinkActive="active">
+                Administración
+              </a>
+            }
+          }
+        }
+  
+        <a routerLink="/perfil" routerLinkActive="active">
+          Mi perfil
+        </a>
+  
+        <button
+          type="button"
+          class="logout-button"
+          (click)="cerrarSesion()">
+          Cerrar sesión
+        </button>
+  
+      }
+  
+    </nav>
+  </header>
+  
