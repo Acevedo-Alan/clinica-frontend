@@ -7,6 +7,10 @@ import { Perfil } from './pages/perfil/perfil';
 import { authGuard } from './core/guards/auth-guard';
 import { rolGuard } from './core/guards/rol-guard';
 import { NoEncontrada } from './pages/no-encontrada/no-encontrada';
+import { Paciente } from './pages/paciente/paciente';
+import { Medico } from './pages/medico/medico';
+import { Operador } from './pages/operador/operador';
+import { Admin } from './pages/admin/admin';
 
 export const routes: Routes = [
   {
@@ -31,39 +35,35 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  // Secciones por rol (provisorias)
-  {
-    path: 'paciente',
-    canActivate: [rolGuard],
-    data: { roles: ['paciente'] },
-    loadComponent: () =>
-      import('./pages/inicio/inicio').then(m => m.Inicio),
-    title: 'Panel de paciente | Clínica Salud'
-  },
-  {
-    path: 'medico',
-    canActivate: [rolGuard],
-    data: { roles: ['medico'] },
-    loadComponent: () =>
-      import('./pages/inicio/inicio').then(m => m.Inicio),
-    title: 'Panel médico | Clínica Salud'
-  },
-  {
-    path: 'operador',
-    canActivate: [rolGuard],
-    data: { roles: ['operador'] },
-    loadComponent: () =>
-      import('./pages/inicio/inicio').then(m => m.Inicio),
-    title: 'Panel de operador | Clínica Salud'
-  },
-  {
-    path: 'admin',
-    canActivate: [rolGuard],
-    data: { roles: ['admin'] },
-    loadComponent: () =>
-      import('./pages/inicio/inicio').then(m => m.Inicio),
-    title: 'Panel de administración | Clínica Salud'
-  },
+    // Secciones protegidas por rol
+    {
+      path: 'paciente',
+      component: Paciente,
+      canActivate: [authGuard, rolGuard],
+      data: { roles: ['paciente'] },
+      title: 'Panel de paciente | Clínica Salud'
+    },
+    {
+      path: 'medico',
+      component: Medico,
+      canActivate: [authGuard, rolGuard],
+      data: { roles: ['medico'] },
+      title: 'Panel médico | Clínica Salud'
+    },
+    {
+      path: 'operador',
+      component: Operador,
+      canActivate: [authGuard, rolGuard],
+      data: { roles: ['operador'] },
+      title: 'Panel de operador | Clínica Salud'
+    },
+    {
+      path: 'admin',
+      component: Admin,
+      canActivate: [authGuard, rolGuard],
+      data: { roles: ['admin'] },
+      title: 'Panel de administración | Clínica Salud'
+    },
 
   // Esta ruta siempre debe quedar última
   {

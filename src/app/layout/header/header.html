@@ -1,82 +1,156 @@
 
 <header class="header">
-    <a class="brand" routerLink="/" aria-label="Clínica, inicio">
-      <span class="brand-icon">+</span>
+
+  <!-- IZQUIERDA: LOGO Y SALUDO -->
+  <div class="header-left">
+
+    <a
+      class="brand"
+      routerLink="/"
+      aria-label="Clínica Salud, inicio">
+
+      <span class="brand-icon" aria-hidden="true">+</span>
       <span>Clínica Salud</span>
     </a>
-  
-    <nav class="navigation" aria-label="Navegación principal">
-  
-      <a
-        routerLink="/"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">
-        Inicio
-      </a>
-  
-      @if (!autenticado()) {
-  
-        <a routerLink="/login" routerLinkActive="active">
-          Iniciar sesión
-        </a>
-  
-        <a
-          routerLink="/registro"
-          routerLinkActive="active"
-          class="register-link">
-          Registrarse
-        </a>
-  
-      } @else {
-  
-        @if (usuario(); as u) {
-          <span class="user-info">
-            Hola, {{ u.nombre }}
+
+    @if (!autenticado()) {
+
+      <span class="welcome-message">
+        Bienvenido a la clínica virtual
+      </span>
+
+    } @else {
+
+      @if (usuario(); as u) {
+
+        <div class="user-info">
+
+          <!-- Avatar del usuario -->
+          <div class="user-avatar" aria-hidden="true">
+            <mat-icon>person</mat-icon>
+          </div>
+
+          <!-- Saludo, nombre y rol -->
+          <div class="user-text">
+
+            <span class="user-greeting">
+              Hola,
+            </span>
+
+            <span class="user-name">
+              {{ u.nombre }} {{ u.apellido }}
+            </span>
+
             <span class="user-role">
               {{ obtenerNombreRol(u.rol) }}
             </span>
-          </span>
-  
-          @switch (u.rol) {
-            @case ('paciente') {
-              <a routerLink="/paciente" routerLinkActive="active">
-                Mi panel
-              </a>
-            }
-  
-            @case ('medico') {
-              <a routerLink="/medico" routerLinkActive="active">
-                Mi agenda
-              </a>
-            }
-  
-            @case ('operador') {
-              <a routerLink="/operador" routerLinkActive="active">
-                Gestión
-              </a>
-            }
-  
-            @case ('admin') {
-              <a routerLink="/admin" routerLinkActive="active">
-                Administración
-              </a>
-            }
-          }
-        }
-  
-        <a routerLink="/perfil" routerLinkActive="active">
-          Mi perfil
-        </a>
-  
-        <button
-          type="button"
-          class="logout-button"
-          (click)="cerrarSesion()">
-          Cerrar sesión
-        </button>
-  
+
+          </div>
+
+        </div>
+
       }
-  
-    </nav>
-  </header>
-  
+
+    }
+
+  </div>
+
+  <!-- DERECHA: BOTONES DE NAVEGACIÓN -->
+  <nav class="navigation" aria-label="Navegación principal">
+
+    <a
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      Inicio
+    </a>
+
+    @if (!autenticado()) {
+
+      <a
+        routerLink="/login"
+        routerLinkActive="active">
+        Iniciar sesión
+      </a>
+
+      <a
+        routerLink="/registro"
+        routerLinkActive="active"
+        class="register-link">
+        Registrarse
+      </a>
+
+    } @else {
+
+      @if (usuario(); as u) {
+
+        @switch (u.rol) {
+
+          @case ('paciente') {
+            <a
+              routerLink="/paciente"
+              routerLinkActive="active">
+              Mi panel
+            </a>
+          }
+
+          @case ('medico') {
+            <a
+              routerLink="/medico"
+              routerLinkActive="active">
+              Mi agenda
+            </a>
+          }
+
+          @case ('operador') {
+            <a
+              routerLink="/operador"
+              routerLinkActive="active">
+              Gestión
+            </a>
+          }
+
+          @case ('admin') {
+            <a
+              routerLink="/admin"
+              routerLinkActive="active">
+              Administración
+            </a>
+          }
+
+        }
+
+      }
+
+      <a
+        routerLink="/perfil"
+        routerLinkActive="active">
+        Mi perfil
+      </a>
+
+      <!-- NOTIFICACIONES: SEMANA 3 -->
+      <button
+        mat-icon-button
+        type="button"
+        matTooltip="Notificaciones disponibles próximamente"
+        aria-label="Notificaciones disponibles próximamente">
+
+        <mat-icon>notifications_none</mat-icon>
+      </button>
+
+      <!-- CERRAR SESIÓN -->
+      <button
+        mat-stroked-button
+        type="button"
+        class="logout-button"
+        (click)="cerrarSesion()">
+
+        <mat-icon>logout</mat-icon>
+        Cerrar sesión
+      </button>
+
+    }
+
+  </nav>
+
+</header>

@@ -1,177 +1,329 @@
+
 <section class="registro-page">
-
     <mat-card class="registro-card">
-
-        <mat-card-header>
-            <mat-card-title>Crear cuenta</mat-card-title>
-            <mat-card-subtitle>
-                Registrate como paciente de Clínica Salud
-            </mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-
-            <form [formGroup]="registroForm" (ngSubmit)="registrar()">
-
-                <div class="form-grid">
-
-                    <!-- NOMBRE -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Nombre</mat-label>
-                        <input matInput formControlName="nombre">
-
-                        @if (registroForm.controls.nombre.hasError('required')) {
-                        <mat-error>El nombre es obligatorio</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- APELLIDO -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Apellido</mat-label>
-                        <input matInput formControlName="apellido">
-
-                        @if (registroForm.controls.apellido.hasError('required')) {
-                        <mat-error>El apellido es obligatorio</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- DNI -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>DNI</mat-label>
-                        <input matInput formControlName="dni" inputmode="numeric" maxlength="8">
-
-                        @if (registroForm.controls.dni.hasError('required')) {
-                        <mat-error>El DNI es obligatorio</mat-error>
-                        } @else if (registroForm.controls.dni.hasError('pattern')) {
-                        <mat-error>Ingresá un DNI válido de 7 u 8 números</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- FECHA DE NACIMIENTO -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Fecha de nacimiento</mat-label>
-
-                        <input matInput type="date" formControlName="fechaNacimiento">
-
-                        @if (registroForm.controls.fechaNacimiento.hasError('required')) {
-                        <mat-error>La fecha de nacimiento es obligatoria</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- EMAIL -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Correo electrónico</mat-label>
-                        <input matInput type="email" formControlName="email">
-
-                        @if (registroForm.controls.email.hasError('required')) {
-                        <mat-error>El correo es obligatorio</mat-error>
-                        } @else if (registroForm.controls.email.hasError('email')) {
-                        <mat-error>Ingresá un correo válido</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- TELÉFONO -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Teléfono</mat-label>
-                        <input matInput type="tel" formControlName="telefono">
-
-                        @if (registroForm.controls.telefono.hasError('required')) {
-                        <mat-error>El teléfono es obligatorio</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- COBERTURA MÉDICA -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Cobertura médica</mat-label>
-
-                        <mat-select formControlName="coberturaId">
-
-                            @for (cobertura of coberturas; track cobertura.id) {
-                            <mat-option [value]="cobertura.id">
-                                {{ cobertura.nombre }}
-                            </mat-option>
-                            }
-
-                        </mat-select>
-
-                        @if (registroForm.controls.coberturaId.hasError('required')) {
-                        <mat-error>Seleccioná una cobertura médica</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- CONTRASEÑA -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Contraseña</mat-label>
-                        <input matInput type="password" formControlName="password">
-
-                        @if (registroForm.controls.password.hasError('required')) {
-                        <mat-error>La contraseña es obligatoria</mat-error>
-                        } @else if (registroForm.controls.password.hasError('minlength')) {
-                        <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- CONFIRMAR CONTRASEÑA -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Confirmar contraseña</mat-label>
-                        <input matInput type="password" formControlName="confirmarPassword">
-
-                        @if (registroForm.controls.confirmarPassword.hasError('required')) {
-                        <mat-error>Confirmá tu contraseña</mat-error>
-                        }
-                    </mat-form-field>
-
-                </div>
-
-                <!-- ESTADO DE CARGA DE COBERTURAS -->
-                @if (cargandoCoberturas) {
-                <p class="loading-message">
-                    Cargando coberturas médicas...
-                </p>
+  
+      <mat-card-header>
+        <mat-card-title>Crear cuenta</mat-card-title>
+        <mat-card-subtitle>
+          Registrate como paciente de Clínica Salud
+        </mat-card-subtitle>
+      </mat-card-header>
+  
+      <mat-card-content>
+        <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+  
+          <!-- CAMPOS DEL FORMULARIO -->
+          <div class="form-grid">
+  
+            <!-- NOMBRE -->
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre">
+            </mat-form-field>
+  
+            <!-- APELLIDO -->
+            <mat-form-field appearance="outline">
+              <mat-label>Apellido</mat-label>
+              <input matInput formControlName="apellido">
+            </mat-form-field>
+  
+            <!-- DNI -->
+            <mat-form-field appearance="outline">
+              <mat-label>DNI</mat-label>
+              <input
+                matInput
+                formControlName="dni"
+                inputmode="numeric"
+                maxlength="8">
+            </mat-form-field>
+  
+            <!-- FECHA DE NACIMIENTO -->
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de nacimiento</mat-label>
+              <input
+                matInput
+                type="date"
+                formControlName="fechaNacimiento">
+            </mat-form-field>
+  
+            <!-- EMAIL -->
+            <mat-form-field appearance="outline">
+              <mat-label>Correo electrónico</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email">
+            </mat-form-field>
+  
+            <!-- TELÉFONO -->
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input
+                matInput
+                type="tel"
+                formControlName="telefono">
+            </mat-form-field>
+  
+            <!-- COBERTURA MÉDICA -->
+            <mat-form-field appearance="outline">
+              <mat-label>Cobertura médica</mat-label>
+  
+              <mat-select formControlName="coberturaId">
+                @for (cobertura of coberturas(); track cobertura.id) {
+                  <mat-option [value]="cobertura.id">
+                    {{ cobertura.nombre }}
+                  </mat-option>
                 }
-
-                <!-- ERROR AL CONSULTAR EL BACKEND -->
-                @if (errorCoberturas) {
-                <p class="error-message" role="alert">
-                    {{ errorCoberturas }}
-                </p>
-
-                <button mat-stroked-button type="button" (click)="cargarCoberturas()">
-                    Reintentar
-                </button>
-                }
-
-                <!-- RESULTADO DEL REGISTRO -->
-                @if (mensajeExito) {
-                <p class="success-message" role="status">
-                    {{ mensajeExito }}
-                </p>
-                }
-
-                @if (errorRegistro) {
-                <p class="error-message" role="alert">
-                    {{ errorRegistro }}
-                </p>
-                }
-
-                <!-- BOTÓN REGISTRARSE -->
-                <button mat-flat-button type="submit" class="submit-button"
-                    [disabled]="registrando || cargandoCoberturas || !!errorCoberturas">
-
-                    {{ registrando ? 'Registrando...' : 'Registrarme' }}
-
-                </button>
-
-            </form>
-
-            <!-- ENLACE AL LOGIN -->
-            <p class="login-link">
-                ¿Ya tenés cuenta?
-                <a routerLink="/login">Iniciá sesión</a>
+              </mat-select>
+            </mat-form-field>
+  
+            <!-- CONTRASEÑA -->
+            <mat-form-field appearance="outline">
+              <mat-label>Contraseña</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="password">
+            </mat-form-field>
+  
+            <!-- CONFIRMAR CONTRASEÑA -->
+            <mat-form-field appearance="outline">
+              <mat-label>Confirmar contraseña</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="confirmarPassword">
+            </mat-form-field>
+  
+          </div>
+  
+          <!-- VALIDACIÓN: NOMBRE -->
+          @if (
+            registroForm.controls.nombre.hasError('required') &&
+            registroForm.controls.nombre.touched
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>El nombre es obligatorio</strong>
+                <span>Ingresá tu nombre para continuar.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: APELLIDO -->
+          @if (
+            registroForm.controls.apellido.hasError('required') &&
+            registroForm.controls.apellido.touched
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>El apellido es obligatorio</strong>
+                <span>Ingresá tu apellido para continuar.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: DNI -->
+          @if (
+            registroForm.controls.dni.touched &&
+            registroForm.controls.dni.hasError('required')
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>El DNI es obligatorio</strong>
+                <span>Ingresá tu número de documento.</span>
+              </div>
+            </div>
+          } @else if (
+            registroForm.controls.dni.touched &&
+            registroForm.controls.dni.hasError('pattern')
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>El DNI no es válido</strong>
+                <span>Ingresá entre 7 y 8 números, sin puntos.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: FECHA DE NACIMIENTO -->
+          @if (
+            registroForm.controls.fechaNacimiento.hasError('required') &&
+            registroForm.controls.fechaNacimiento.touched
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>La fecha de nacimiento es obligatoria</strong>
+                <span>Seleccioná tu fecha de nacimiento.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: EMAIL -->
+          @if (
+            registroForm.controls.email.touched &&
+            registroForm.controls.email.hasError('required')
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>El correo electrónico es obligatorio</strong>
+                <span>Ingresá tu dirección de correo.</span>
+              </div>
+            </div>
+          } @else if (
+            registroForm.controls.email.touched &&
+            registroForm.controls.email.hasError('email')
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>El correo electrónico no es válido</strong>
+                <span>Revisá el formato de tu dirección de correo.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: TELÉFONO -->
+          @if (
+            registroForm.controls.telefono.hasError('required') &&
+            registroForm.controls.telefono.touched
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>El teléfono es obligatorio</strong>
+                <span>Ingresá un número de contacto.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: COBERTURA MÉDICA -->
+          @if (
+            registroForm.controls.coberturaId.hasError('required') &&
+            registroForm.controls.coberturaId.touched
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>La cobertura médica es obligatoria</strong>
+                <span>Seleccioná una cobertura para continuar.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: CONTRASEÑA -->
+          @if (
+            registroForm.controls.password.touched &&
+            registroForm.controls.password.hasError('required')
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>La contraseña es obligatoria</strong>
+                <span>Ingresá una contraseña para tu cuenta.</span>
+              </div>
+            </div>
+          } @else if (
+            registroForm.controls.password.touched &&
+            registroForm.controls.password.hasError('minlength')
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>La contraseña es demasiado corta</strong>
+                <span>Debe tener al menos 8 caracteres.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- VALIDACIÓN: CONFIRMAR CONTRASEÑA -->
+          @if (
+            registroForm.controls.confirmarPassword.hasError('required') &&
+            registroForm.controls.confirmarPassword.touched
+          ) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>Debés confirmar tu contraseña</strong>
+                <span>Volvé a escribir tu contraseña en este campo.</span>
+              </div>
+            </div>
+          }
+  
+          <!-- CONTRASEÑAS DIFERENTES -->
+          @if (contrasenasNoCoinciden()) {
+            <div class="password-warning" role="alert">
+              <span class="warning-icon" aria-hidden="true">!</span>
+              <div class="warning-content">
+                <strong>Las contraseñas no coinciden</strong>
+                <span>
+                  Verificá ambas contraseñas. Deben ser exactamente iguales.
+                </span>
+              </div>
+            </div>
+          }
+  
+          <!-- CARGA DE COBERTURAS -->
+          @if (cargandoCoberturas()) {
+            <p class="loading-message" role="status">
+              Cargando coberturas médicas...
             </p>
-
-        </mat-card-content>
-
+          }
+  
+          <!-- ERROR AL CARGAR COBERTURAS -->
+          @if (errorCoberturas()) {
+            <p class="error-message" role="alert">
+              {{ errorCoberturas() }}
+            </p>
+  
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="cargarCoberturas()"
+              [disabled]="cargandoCoberturas()">
+              Reintentar
+            </button>
+          }
+  
+          <!-- MENSAJE DE ÉXITO -->
+          @if (mensajeExito()) {
+            <p class="success-message" role="status">
+              {{ mensajeExito() }}
+            </p>
+          }
+  
+          <!-- ERROR DE REGISTRO -->
+          @if (errorRegistro()) {
+            <p class="error-message" role="alert">
+              {{ errorRegistro() }}
+            </p>
+          }
+  
+          <!-- BOTÓN DE REGISTRO -->
+          <button
+            mat-flat-button
+            type="submit"
+            class="submit-button boton-clinica"
+            [disabled]="registrando() || cargandoCoberturas() || !!errorCoberturas()">
+            {{ registrando() ? 'Registrando...' : 'Registrarme' }}
+          </button>
+  
+        </form>
+  
+        <!-- ENLACE AL LOGIN -->
+        <p class="login-link">
+          ¿Ya tenés cuenta?
+          <a routerLink="/login">Iniciá sesión</a>
+        </p>
+  
+      </mat-card-content>
+  
     </mat-card>
-
-</section>
+  </section>
+  

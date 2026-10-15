@@ -1,59 +1,96 @@
-# ClinicaFrontend
+# Clínica Salud — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.26.
+Aplicación web para la gestión de una clínica, desarrollada con Angular y conectada a una API REST construida con Node.js, Express y MySQL.
 
-## Development server
+## Tecnologías utilizadas
 
-To start a local development server, run:
+- **Node.js:** 22.20.0
+- **Angular CLI:** 21.2.26
+- **Angular:** 21.2.25
+- **Angular Material:** 21
+- **TypeScript:** 5.9
+- **Backend:** Node.js y Express
+- **Base de datos:** MySQL
+- **Autenticación:** JWT
 
-```bash
-ng serve
-```
+## Funcionalidades implementadas
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Registro de pacientes con validaciones.
+- Listado de coberturas médicas obtenido desde el backend.
+- Inicio de sesión mediante DNI y contraseña.
+- Autenticación con JWT.
+- Persistencia de sesión al recargar la página.
+- Cierre de sesión.
+- Protección de rutas mediante guards.
+- Acceso a secciones según el rol del usuario: administrador, médico, operador y paciente.
+- Consulta de datos personales desde la pantalla «Mi perfil».
+- Página de error para rutas inexistentes.
+- Layout general con encabezado, menú de navegación y pie de página.
 
-## Code scaffolding
+## Requisitos previos
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js compatible con Angular 21.
+- Angular CLI 21.
+- Backend de Clínica Salud configurado y en ejecución.
+- Base de datos MySQL configurada para el backend.
 
-```bash
-ng generate component component-name
-```
+## Instalación
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Clonar el repositorio:
 
 ```bash
-ng test
+git clone https://github.com/Acevedo-Alan/clinica-frontend.git
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Ingresar al proyecto:
 
 ```bash
-ng e2e
+cd clinica-frontend
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Instalar las dependencias:
 
-## Additional Resources
+```bash
+npm install
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Configuración
+
+Verificar la URL base de la API en:
+
+`src/environments/environment.ts`
+
+El backend debe estar en ejecución y tener habilitado CORS para permitir las solicitudes desde el frontend.
+
+## Ejecución
+
+Iniciar el servidor de desarrollo:
+
+```bash
+npx ng serve
+```
+
+Abrir en el navegador:
+
+http://localhost:4200
+
+## Roles disponibles
+
+- **Paciente:** acceso a su sección y perfil.
+- **Médico:** acceso a su sección y perfil.
+- **Operador:** acceso a su sección y perfil.
+- **Administrador:** acceso a su sección y perfil.
+
+Las funcionalidades específicas de cada sección se incorporarán progresivamente en las siguientes etapas del proyecto.
+
+## Seguridad
+
+Las rutas privadas están protegidas mediante guards de Angular. Las peticiones autenticadas incluyen el token JWT y el backend valida los permisos correspondientes.
+
+## Estado del proyecto
+
+Frontend inicial correspondiente a la Semana 1 de desarrollo.
+
+## Rama de entrega
+
+`entrega-frontend-1`

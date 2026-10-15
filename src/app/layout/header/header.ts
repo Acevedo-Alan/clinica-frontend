@@ -7,12 +7,21 @@ import {
   NavigationEnd
 } from '@angular/router';
 import { filter } from 'rxjs';
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService, UsuarioSesion } from '../../core/services/auth';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive],
+  standalone: true,
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+  ],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

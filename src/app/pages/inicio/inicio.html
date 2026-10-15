@@ -1,1 +1,89 @@
-<p>inicio works!</p>
+<section class="hero">
+  <div class="hero-content">
+    <span class="eyebrow">CLÍNICA SALUD</span>
+
+    @if (estaAutenticado()) {
+      <h1>Bienvenido a tu clínica virtual</h1>
+
+      <p>
+        Accedé a las funcionalidades disponibles
+        desde tu panel o el menú de navegación.
+      </p>
+
+      <div class="hero-actions">
+        <a mat-flat-button [routerLink]="obtenerRutaPanel()">
+          <mat-icon>dashboard</mat-icon>
+          Ir a mi panel
+        </a>
+
+        <a mat-stroked-button routerLink="/perfil">
+          <mat-icon>person</mat-icon>
+          Mi perfil
+        </a>
+      </div>
+    } @else {
+      <h1>Tu salud, nuestra prioridad</h1>
+
+      <p>
+        Bienvenido a Clínica Salud. Accedé a nuestra
+        plataforma para consultar tus datos personales
+        y gestionar los servicios de la clínica.
+      </p>
+
+      <div class="hero-actions">
+        <a mat-flat-button routerLink="/login">
+          <mat-icon>login</mat-icon>
+          Iniciar sesión
+        </a>
+
+        <a mat-stroked-button routerLink="/registro">
+          <mat-icon>person_add</mat-icon>
+          Registrarme
+        </a>
+      </div>
+
+      <p class="trust">
+        <mat-icon>verified_user</mat-icon>
+        Tus datos están protegidos.
+      </p>
+    }
+  </div>
+
+  <div class="hero-illustration" aria-hidden="true">
+    <div class="circle">
+      <span class="medical-cross">+</span>
+    </div>
+    <span class="medical-heart">♥</span>
+    <div class="floating-card">
+      <span class="status-dot"></span>
+      Atención centrada en vos
+    </div>
+  </div>
+</section>
+
+<section class="services">
+  <div class="section-heading">
+    <h2>¿Qué podés hacer en Clínica Salud?</h2>
+    <p>Una plataforma para acompañarte en el cuidado de tu salud.</p>
+  </div>
+
+  <div class="service-grid">
+    <div class="service-card">
+      <mat-icon class="service-icon">person</mat-icon>
+      <h3>Tu perfil</h3>
+      <p>Consultá tus datos personales registrados en la clínica.</p>
+    </div>
+
+    <div class="service-card">
+      <mat-icon class="service-icon">health_and_safety</mat-icon>
+      <h3>Cobertura médica</h3>
+      <p>Registrate seleccionando tu cobertura médica disponible.</p>
+    </div>
+
+    <div class="service-card">
+      <mat-icon class="service-icon">lock</mat-icon>
+      <h3>Acceso seguro</h3>
+      <p>Ingresá a tu espacio personal con tu DNI y contraseña.</p>
+    </div>
+  </div>
+</section>

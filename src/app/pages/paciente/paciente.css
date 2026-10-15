@@ -1,0 +1,155 @@
+
+:host {
+    display: block;
+  }
+  
+  /* CONTENEDOR PRINCIPAL - IGUAL A MI PERFIL */
+  
+  .panel {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  
+  /* ENCABEZADO */
+  
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  
+  .panel-header h1 {
+    margin: 0 0 8px;
+    color: #146c5b;
+    font-size: 28px;
+    font-weight: 600;
+  }
+  
+  .panel-header p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  .panel-header > mat-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    font-size: 44px;
+    color: #146c5b;
+  }
+  
+  /* GRILLA DE TARJETAS */
+  
+  .panel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+  }
+  
+  /* TARJETAS - MISMO ESTILO QUE PERFIL */
+  
+  .panel-grid mat-card {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* TÍTULOS Y SUBTÍTULOS */
+  
+  mat-card-title {
+    color: #263238;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  mat-card-subtitle {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  /* ÍCONOS */
+  
+  mat-icon[mat-card-avatar] {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    border-radius: 10px;
+    background: #e6f4f1;
+    color: #146c5b;
+    font-size: 24px;
+  }
+  
+  /* CONTENIDO */
+  
+  mat-card-content {
+    padding-top: 18px;
+    color: #52616b;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  /* ACCIONES */
+  
+  mat-card-actions {
+    margin-top: auto;
+    padding: 12px 16px 8px;
+  }
+  
+  mat-card-actions a {
+    color: #146c5b;
+    font-weight: 600;
+  }
+  
+  /* EFECTO SUAVE AL PASAR EL MOUSE */
+  
+  .panel-grid mat-card {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  
+  .panel-grid mat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+  }
+  
+  /* RESPONSIVE */
+  
+  @media (max-width: 600px) {
+    .panel {
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+  
+    .panel-header h1 {
+      font-size: 24px;
+    }
+  
+    .panel-header > mat-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 36px;
+    }
+  
+    .panel-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  
+    .panel-grid mat-card {
+      padding: 16px;
+    }
+  }
+  

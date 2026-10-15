@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+/* BOTONES PRINCIPALES */
+
+button.boton-clinica,
+a.boton-clinica {
+  --mdc-filled-button-container-color: #087e8b;
+  --mdc-filled-button-label-text-color: #ffffff;
+  --mat-button-filled-container-color: #087e8b;
+  --mat-button-filled-label-text-color: #ffffff;
+
+  background-color: #087e8b !important;
+  color: #ffffff !important;
+  border-radius: 9px !important;
+  font-weight: 600 !important;
+  min-height: 44px;
+}
+
+button.boton-clinica:not(:disabled):hover,
+a.boton-clinica:hover {
+  background-color: #066873 !important;
+}
+
+button.boton-clinica:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

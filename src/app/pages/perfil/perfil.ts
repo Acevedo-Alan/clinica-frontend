@@ -1,16 +1,15 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-
 import { AuthService } from '../../core/services/auth';
 import { CoberturaService } from '../../core/services/cobertura';
-
 import { UsuarioPerfil } from '../../models/usuario-perfil';
 import { Cobertura } from '../../models/cobertura';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-perfil',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, MatButtonModule],
   templateUrl: './perfil.html',
   styleUrl: './perfil.css'
 })
@@ -80,15 +79,15 @@ export class Perfil implements OnInit {
   }
 
   // Buscar el nombre de una cobertura a partir de su ID
-  obtenerNombreCobertura(id: number | null): string {
-    if (id === null) {
+  obtenerNombreCobertura(id: number | null | undefined): string {
+    if (id == null) {
       return 'Sin cobertura';
     }
-
+  
     const cobertura = this.coberturas().find(
       cobertura => cobertura.id === id
     );
-
+  
     return cobertura?.nombre ?? 'Cobertura no disponible';
   }
 }
