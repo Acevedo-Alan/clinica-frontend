@@ -19,11 +19,31 @@
   @if (auth.usuario(); as u) {
     <button
       mat-icon-button
-      matTooltip="Las notificaciones estarán disponibles próximamente"
+      [matMenuTriggerFor]="menuNotificaciones"
+      matTooltip="Notificaciones"
       aria-label="Notificaciones"
     >
-      <mat-icon>notifications</mat-icon>
+      <mat-icon
+        [matBadge]="notificaciones.noLeidas()"
+        [matBadgeHidden]="notificaciones.noLeidas() === 0"
+        matBadgeColor="warn"
+        matBadgeSize="small"
+        >notifications</mat-icon
+      >
     </button>
+
+    <mat-menu #menuNotificaciones="matMenu" class="menu-notificaciones" xPosition="before">
+      @if (notificaciones.notificaciones().length === 0) {
+        <div class="notif-vacio">No tenés notificaciones</div>
+      } @else {
+        @for (n of notificaciones.notificaciones(); track n.id) {
+          <button mat-menu-item class="notif-item" [class.no-leida]="!n.leida" (click)="marcarLeida(n)">
+            <span class="notif-mensaje">{{ n.mensaje }}</span>
+            <span class="notif-fecha">{{ fechaHora(n.fecha) }}</span>
+          </button>
+        }
+      }
+    </mat-menu>
 
     <span class="usuario">
       <span class="usuario-nombre">{{ u.nombre }} {{ u.apellido }}</span>

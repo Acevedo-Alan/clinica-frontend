@@ -96,6 +96,49 @@ h3 {
   padding: 8px;
 }
 
+/* Menú de notificaciones del header (panelClass del mat-menu: vive en el overlay, fuera del componente) */
+.menu-notificaciones {
+  max-width: 360px;
+  max-height: 420px;
+
+  .notif-vacio {
+    padding: 16px;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .notif-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    height: auto;
+    min-height: 56px;
+    padding-block: 10px;
+    line-height: 1.3;
+    white-space: normal;
+
+    &.no-leida {
+      background: var(--mat-sys-primary-container);
+
+      .notif-mensaje {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .notif-mensaje {
+    font-size: 0.88rem;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .notif-fecha {
+    font-size: 0.75rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

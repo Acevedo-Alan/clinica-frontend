@@ -13,7 +13,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Cobertura } from '../../core/models/api.models';
 import { AuthService } from '../../core/services/auth.service';
 import { CoberturaService } from '../../core/services/cobertura.service';
-import { mensajeDeError } from '../../core/util/errores';
+import { fechaAIso, mensajeDeError } from '../../core/util/errores';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -50,10 +50,14 @@ export class Registro {
   protected readonly verPassword = signal(false);
 
   protected readonly form = this.fb.group({
-    nombre: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(50)]),
-    apellido: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(50)]),
+    nombre: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(30)]),
+    apellido: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(30)]),
     dni: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(/^\d{7,8}$/)]),
-    email: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(EMAIL), Validators.maxLength(100)]),
+    email: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.pattern(EMAIL),
+      Validators.maxLength(30),
+    ]),
     password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)]),
     fecha_nacimiento: this.fb.control<Date | null>(null, [Validators.required]),
     id_cobertura: this.fb.control<number | null>(null, [Validators.required]),
@@ -94,12 +98,14 @@ export class Registro {
         dni: v.dni,
         email: v.email.trim(),
         password: v.password,
-        fecha_nacimiento: this.aIso(v.fecha_nacimiento!),
+        fecha_nacimiento: fechaAIso(v.fecha_nacimiento!),
         id_cobertura: v.id_cobertura!,
       })
       .subscribe({
         next: () => {
-          this.snackBar.open('¡Registro exitoso! Ahora podés iniciar sesión.', 'Cerrar', { duration: 6000 });
+          this.snackBar.open('¡Registro exitoso! Ahora podés iniciar sesión.', 'Cerrar', {
+            duration: 6000,
+          });
           void this.router.navigate(['/login'], { queryParams: { registrado: 1 } });
         },
         error: (e: unknown) => {
@@ -107,12 +113,5 @@ export class Registro {
           this.enviando.set(false);
         },
       });
-  }
-
-  /** Date local -> "YYYY-MM-DD" sin corrimiento de zona horaria. */
-  private aIso(d: Date): string {
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${d.getFullYear()}-${mm}-${dd}`;
   }
 }

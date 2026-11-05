@@ -5,13 +5,16 @@ import { map, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   ApiResponse,
+  CambioPassword,
   LoginRequest,
   LoginResponse,
   Perfil,
+  PerfilEdicion,
   RegistroRequest,
   Rol,
   UsuarioSesion,
 } from '../models/api.models';
+import { NotificacionService } from './notificacion.service';
 
 const CLAVE_TOKEN = 'clinica.token';
 const CLAVE_USUARIO = 'clinica.usuario';
@@ -20,6 +23,7 @@ const CLAVE_USUARIO = 'clinica.usuario';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly notificaciones = inject(NotificacionService);
   private readonly api = `${environment.apiUrl}/auth`;
 
   private readonly _token = signal<string | null>(null);
@@ -49,6 +53,19 @@ export class AuthService {
     return this.http.get<ApiResponse<Perfil>>(`${this.api}/perfil`).pipe(map((r) => r.datos));
   }
 
+  /** Solo paciente: el backend acepta email/telefono/id_cobertura para ese rol. */
+  actualizarPerfil(datos: PerfilEdicion) {
+    return this.http
+      .put<ApiResponse<Perfil>>(`${this.api}/perfil`, datos)
+      .pipe(map((r) => r.datos));
+  }
+
+  cambiarPassword(datos: CambioPassword) {
+    return this.http
+      .put<ApiResponse<{ mensaje: string }>>(`${this.api}/password`, datos)
+      .pipe(map((r) => r.datos));
+  }
+
   /** Elimina el token y vuelve a la pantalla principal. */
   logout(): void {
     this.limpiarSesion();
@@ -72,6 +89,7 @@ export class AuthService {
   limpiarSesion(): void {
     this._token.set(null);
     this._usuario.set(null);
+    this.notificaciones.limpiar();
     try {
       localStorage.removeItem(CLAVE_TOKEN);
       localStorage.removeItem(CLAVE_USUARIO);
@@ -89,6 +107,7 @@ export class AuthService {
     } catch {
       /* sin persistencia: la sesión dura hasta recargar */
     }
+    this.notificaciones.cargar().subscribe({ error: () => void 0 });
   }
 
   private restaurarSesion(): void {
@@ -102,6 +121,7 @@ export class AuthService {
       }
       this._token.set(token);
       this._usuario.set(JSON.parse(usuario) as UsuarioSesion);
+      this.notificaciones.cargar().subscribe({ error: () => void 0 });
     } catch {
       this.limpiarSesion();
     }

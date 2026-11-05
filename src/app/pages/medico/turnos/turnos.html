@@ -1,0 +1,102 @@
+<div class="pagina">
+  <h1>Turnos del día</h1>
+
+  <div class="filtros">
+    <mat-form-field>
+      <mat-label>Fecha</mat-label>
+      <input
+        matInput
+        [matDatepicker]="selector"
+        [ngModel]="fecha()"
+        (ngModelChange)="cambiarFecha($event)"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="selector" />
+      <mat-datepicker #selector />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Sede</mat-label>
+      <mat-select [ngModel]="filtroSede()" (ngModelChange)="filtroSede.set($event)">
+        <mat-option [value]="''">Todas</mat-option>
+        @for (s of sedesDisponibles(); track s.id) {
+          <mat-option [value]="s.id">{{ s.nombre }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (cargando()) {
+    <div class="centro"><mat-spinner diameter="40" /></div>
+  } @else if (error(); as e) {
+    <div class="aviso-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <span>{{ e }}</span>
+      <button mat-button (click)="cargar()">Reintentar</button>
+    </div>
+  } @else if (filtrados().length === 0) {
+    <p class="vacio">No hay turnos para mostrar ese día.</p>
+  } @else {
+    <table mat-table [dataSource]="filtrados()" multiTemplateDataRows class="tabla">
+      <ng-container matColumnDef="hora">
+        <th mat-header-cell *matHeaderCellDef>Hora</th>
+        <td mat-cell *matCellDef="let t">{{ t.hora }}</td>
+      </ng-container>
+      <ng-container matColumnDef="paciente">
+        <th mat-header-cell *matHeaderCellDef>Paciente</th>
+        <td mat-cell *matCellDef="let t">{{ t.paciente_apellido }}, {{ t.paciente_nombre }}</td>
+      </ng-container>
+      <ng-container matColumnDef="edad">
+        <th mat-header-cell *matHeaderCellDef>Edad</th>
+        <td mat-cell *matCellDef="let t">{{ edadDesdeFecha(t.paciente_fecha_nacimiento) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="sede">
+        <th mat-header-cell *matHeaderCellDef>Sede</th>
+        <td mat-cell *matCellDef="let t">{{ t.sede_nombre }}</td>
+      </ng-container>
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let t">
+          <span class="estado" [class]="t.estado">{{ t.estado }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let t" class="acciones">
+          @if (t.estado === 'confirmado') {
+            <button mat-button (click)="atender(t); $event.stopPropagation()">
+              <mat-icon>task_alt</mat-icon> Marcar como atendido
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Cancelar turno"
+              (click)="cancelar(t); $event.stopPropagation()"
+            >
+              <mat-icon>event_busy</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="detalle">
+        <td mat-cell *matCellDef="let t" [attr.colspan]="columnas.length">
+          @if (expandidoId() === t.id) {
+            <div class="detalle">
+              <mat-icon inline>sticky_note_2</mat-icon>
+              <span><strong>Nota del paciente:</strong> {{ t.nota }}</span>
+            </div>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: columnas"
+        class="fila-turno"
+        [class.expandida]="expandidoId() === row.id"
+        (click)="alternarExpandido(row)"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: ['detalle']" class="fila-detalle"></tr>
+    </table>
+  }
+</div>

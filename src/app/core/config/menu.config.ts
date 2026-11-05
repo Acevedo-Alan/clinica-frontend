@@ -27,14 +27,12 @@ export const ROLES: Rol[] = ['administrador', 'operador', 'medico', 'paciente'];
 /**
  * Menú por rol. Es la única fuente de verdad: de acá salen tanto las opciones
  * del menú lateral como las rutas de cada sección. Todo lo que no es
- * "Mi perfil" apunta, por ahora, a la pantalla "En construcción".
  */
 export const MENU: Record<Rol, ItemMenu[]> = {
   paciente: [
     { titulo: 'Mi perfil', icono: 'account_circle', ruta: 'perfil' },
     { titulo: 'Solicitar turno', icono: 'event_available', ruta: 'solicitar-turno' },
     { titulo: 'Mis turnos', icono: 'calendar_month', ruta: 'mis-turnos' },
-    { titulo: 'Historial clínico', icono: 'assignment', ruta: 'historial' },
   ],
   medico: [
     { titulo: 'Mi perfil', icono: 'account_circle', ruta: 'perfil' },
@@ -54,6 +52,8 @@ export const MENU: Record<Rol, ItemMenu[]> = {
     { titulo: 'Coberturas', icono: 'health_and_safety', ruta: 'coberturas' },
     { titulo: 'Sedes', icono: 'apartment', ruta: 'sedes' },
     { titulo: 'Especialidades', icono: 'local_hospital', ruta: 'especialidades' },
+    { titulo: 'Auditoría', icono: 'history', ruta: 'auditoria' },
+    { titulo: 'Reportes', icono: 'bar_chart', ruta: 'reportes' },
   ],
 };
 

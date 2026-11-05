@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  min-width: 420px;
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.centro {
+  display: grid;
+  place-items: center;
+  padding: 32px 0;
+}
+
+.tabla {
+  width: 100%;
+}
+
+.acciones {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.vacio {
+  padding: 24px 0;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}

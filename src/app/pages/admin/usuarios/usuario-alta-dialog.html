@@ -1,0 +1,131 @@
+<h2 mat-dialog-title>Nuevo usuario</h2>
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <mat-dialog-content class="contenido">
+    @if (errorSelectores(); as es) {
+      <div class="aviso-error" role="alert">
+        <mat-icon>cloud_off</mat-icon>
+        <span>{{ es }}</span>
+      </div>
+    }
+
+    <mat-form-field>
+      <mat-label>Tipo de usuario</mat-label>
+      <mat-select formControlName="rol">
+        <mat-option value="operador">Operador</mat-option>
+        <mat-option value="medico">Médico</mat-option>
+        <mat-option value="administrador">Administrador</mat-option>
+      </mat-select>
+      @if (form.controls.rol.hasError('required')) {
+        <mat-error>Elegí el tipo de usuario</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="fila">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre" maxlength="30" />
+        @if (form.controls.nombre.hasError('required')) {
+          <mat-error>El nombre es obligatorio</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Apellido</mat-label>
+        <input matInput formControlName="apellido" maxlength="30" />
+        @if (form.controls.apellido.hasError('required')) {
+          <mat-error>El apellido es obligatorio</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="fila">
+      <mat-form-field>
+        <mat-label>DNI</mat-label>
+        <input matInput formControlName="dni" inputmode="numeric" maxlength="8" />
+        @if (form.controls.dni.hasError('required')) {
+          <mat-error>El DNI es obligatorio</mat-error>
+        } @else if (form.controls.dni.hasError('pattern')) {
+          <mat-error>Debe ser numérico (7 u 8 dígitos)</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput [matDatepicker]="selector" [max]="hoy" formControlName="fecha_nacimiento" />
+        <mat-datepicker-toggle matIconSuffix [for]="selector" />
+        <mat-datepicker #selector startView="multi-year" />
+        @if (form.controls.fecha_nacimiento.hasError('required')) {
+          <mat-error>Obligatoria</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" maxlength="30" />
+      @if (form.controls.email.hasError('required')) {
+        <mat-error>El email es obligatorio</mat-error>
+      } @else if (form.controls.email.hasError('pattern')) {
+        <mat-error>Ingresá un email válido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" maxlength="15" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" formControlName="password" autocomplete="new-password" />
+      <mat-hint>Mínimo 6 caracteres</mat-hint>
+      @if (form.controls.password.hasError('required')) {
+        <mat-error>La contraseña es obligatoria</mat-error>
+      } @else if (form.controls.password.hasError('minlength')) {
+        <mat-error>Debe tener al menos 6 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    @if (rolSeleccionado() === 'operador' || rolSeleccionado() === 'medico') {
+      <mat-form-field>
+        <mat-label>Sede</mat-label>
+        <mat-select formControlName="id_sede" [disabled]="cargandoSelectores()">
+          @for (s of sedes(); track s.id) {
+            <mat-option [value]="s.id">{{ s.nombre }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.id_sede.hasError('required')) {
+          <mat-error>Elegí la sede</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    @if (rolSeleccionado() === 'medico') {
+      <mat-form-field>
+        <mat-label>Especialidades</mat-label>
+        <mat-select formControlName="especialidades" multiple [disabled]="cargandoSelectores()">
+          @for (esp of especialidadesDisponibles(); track esp.id) {
+            <mat-option [value]="esp.id">{{ esp.descripcion }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.especialidades.hasError('listaVacia')) {
+          <mat-error>Elegí al menos una especialidad</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    @if (error(); as e) {
+      <p class="error">{{ e }}</p>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [mat-dialog-close]="null">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || guardando()">
+      @if (guardando()) {
+        <mat-spinner diameter="20" />
+      } @else {
+        Guardar
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

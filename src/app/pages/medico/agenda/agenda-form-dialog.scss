@@ -1,0 +1,18 @@
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 320px;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.error {
+  margin: 0 0 8px;
+  color: var(--mat-sys-error);
+  font-size: 0.85rem;
+}

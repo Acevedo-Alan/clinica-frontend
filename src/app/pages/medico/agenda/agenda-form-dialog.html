@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>{{ data.bloque ? 'Modificar rango horario' : 'Nuevo rango horario' }}</h2>
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <mat-dialog-content class="contenido">
+    <mat-form-field>
+      <mat-label>Fecha</mat-label>
+      <input matInput [matDatepicker]="selector" [min]="hoy" formControlName="fecha" />
+      <mat-datepicker-toggle matIconSuffix [for]="selector" />
+      <mat-datepicker #selector />
+      @if (form.controls.fecha.hasError('required')) {
+        <mat-error>La fecha es obligatoria</mat-error>
+      } @else if (form.controls.fecha.hasError('matDatepickerMin')) {
+        <mat-error>No puede ser una fecha pasada</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="fila">
+      <mat-form-field>
+        <mat-label>Hora de entrada</mat-label>
+        <input matInput type="time" formControlName="hora_entrada" />
+        @if (form.controls.hora_entrada.hasError('required')) {
+          <mat-error>Obligatoria</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Hora de salida</mat-label>
+        <input matInput type="time" formControlName="hora_salida" />
+        @if (form.controls.hora_salida.hasError('required')) {
+          <mat-error>Obligatoria</mat-error>
+        }
+      </mat-form-field>
+    </div>
+    @if (form.hasError('horaSalidaInvalida')) {
+      <p class="error">La hora de salida debe ser posterior a la de entrada</p>
+    }
+
+    <mat-form-field>
+      <mat-label>Especialidad</mat-label>
+      <mat-select formControlName="id_especialidad">
+        @for (esp of data.especialidades; track esp.id) {
+          <mat-option [value]="esp.id">{{ esp.descripcion }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.id_especialidad.hasError('required')) {
+        <mat-error>Elegí una especialidad</mat-error>
+      }
+      @if (data.especialidades.length === 0) {
+        <mat-hint>No tenés especialidades asignadas: pedile a un administrador que te las asigne.</mat-hint>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Sede</mat-label>
+      <mat-select formControlName="id_sede">
+        @for (sede of data.sedes; track sede.id) {
+          <mat-option [value]="sede.id">{{ sede.nombre }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.id_sede.hasError('required')) {
+        <mat-error>Elegí una sede</mat-error>
+      }
+    </mat-form-field>
+
+    @if (error(); as e) {
+      <p class="error">{{ e }}</p>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [mat-dialog-close]="false">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || guardando()">
+      @if (guardando()) {
+        <mat-spinner diameter="20" />
+      } @else {
+        Guardar
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,165 @@
+.pagina-turnos-operador {
+  max-width: 780px;
+  padding-top: 40px;
+}
+
+.icono-cabecera {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: 0.9rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.centro {
+  display: grid;
+  place-items: center;
+  padding: 80px 0;
+
+  &.chico {
+    padding: 32px 0;
+  }
+}
+
+.paso {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 4px 8px;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+
+  mat-form-field {
+    width: 220px;
+  }
+
+  button {
+    margin-top: 8px;
+  }
+}
+
+.tabla {
+  width: 100%;
+}
+
+.seleccionada {
+  background: var(--mat-sys-primary-container);
+}
+
+.acciones {
+  text-align: right;
+}
+
+.opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.opcion {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  border-radius: 14px;
+
+  &.opcion-hora {
+    min-width: 88px;
+    justify-content: center;
+  }
+
+  &.seleccionada {
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    border-color: var(--mat-sys-primary);
+  }
+}
+
+.vacio {
+  padding: 16px 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.resumen {
+  h2 {
+    margin: 0 0 12px;
+    font-size: 1.05rem;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 0;
+  }
+
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+
+    mat-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  dd {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+}
+
+.completo {
+  width: 100%;
+}
+
+.acciones-confirmar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .acciones-confirmar {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+  }
+}

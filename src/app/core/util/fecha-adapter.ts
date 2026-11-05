@@ -13,7 +13,8 @@ export class FechaArAdapter extends NativeDateAdapter {
       if (!m) return valor.trim() === '' ? null : this.invalid();
       const [d, mes, a] = [Number(m[1]), Number(m[2]), Number(m[3])];
       const fecha = new Date(a, mes - 1, d);
-      const coincide = fecha.getFullYear() === a && fecha.getMonth() === mes - 1 && fecha.getDate() === d;
+      const coincide =
+        fecha.getFullYear() === a && fecha.getMonth() === mes - 1 && fecha.getDate() === d;
       return coincide ? fecha : this.invalid();
     }
     return super.parse(valor);

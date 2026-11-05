@@ -1,0 +1,17 @@
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 360px;
+}
+
+.paciente {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.error {
+  margin: 0 0 8px;
+  color: var(--mat-sys-error);
+  font-size: 0.85rem;
+}

@@ -1,0 +1,118 @@
+import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Cobertura } from '../../../core/models/api.models';
+import { AuthService } from '../../../core/services/auth.service';
+import { CoberturaService } from '../../../core/services/cobertura.service';
+import { fechaAIso, mensajeDeError } from '../../../core/util/errores';
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+/** Mismos campos y validaciones que el self-registro de paciente (`pages/registro`), para alta por operador. */
+@Component({
+  selector: 'app-pacientes-operador',
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+  ],
+  templateUrl: './pacientes.html',
+  styleUrl: './pacientes.scss',
+})
+export class PacientesOperador {
+  private readonly fb = inject(FormBuilder);
+  private readonly auth = inject(AuthService);
+  private readonly coberturaSrv = inject(CoberturaService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  protected readonly hoy = new Date();
+  protected readonly coberturas = signal<Cobertura[]>([]);
+  protected readonly cargandoCoberturas = signal(true);
+  protected readonly errorCoberturas = signal<string | null>(null);
+  protected readonly enviando = signal(false);
+  protected readonly error = signal<string | null>(null);
+  protected readonly verPassword = signal(false);
+
+  protected readonly form = this.fb.group({
+    nombre: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(30)]),
+    apellido: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(30)]),
+    dni: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(/^\d{7,8}$/)]),
+    email: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.pattern(EMAIL),
+      Validators.maxLength(30),
+    ]),
+    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)]),
+    fecha_nacimiento: this.fb.control<Date | null>(null, [Validators.required]),
+    id_cobertura: this.fb.control<number | null>(null, [Validators.required]),
+  });
+
+  constructor() {
+    this.cargarCoberturas();
+  }
+
+  protected cargarCoberturas(): void {
+    this.cargandoCoberturas.set(true);
+    this.errorCoberturas.set(null);
+    this.coberturaSrv.listar().subscribe({
+      next: (lista) => {
+        this.coberturas.set(lista);
+        this.cargandoCoberturas.set(false);
+      },
+      error: (e: unknown) => {
+        this.errorCoberturas.set(mensajeDeError(e, 'No se pudieron cargar las coberturas.'));
+        this.cargandoCoberturas.set(false);
+      },
+    });
+  }
+
+  protected enviar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const v = this.form.getRawValue();
+    this.enviando.set(true);
+    this.error.set(null);
+
+    this.auth
+      .registro({
+        nombre: v.nombre.trim(),
+        apellido: v.apellido.trim(),
+        dni: v.dni,
+        email: v.email.trim(),
+        password: v.password,
+        fecha_nacimiento: fechaAIso(v.fecha_nacimiento!),
+        id_cobertura: v.id_cobertura!,
+      })
+      .subscribe({
+        next: () => {
+          this.snackBar.open(
+            `Paciente ${v.apellido.trim()}, ${v.nombre.trim()} registrado correctamente.`,
+            'Cerrar',
+            { duration: 5000 },
+          );
+          this.form.reset();
+          this.enviando.set(false);
+        },
+        error: (e: unknown) => {
+          this.error.set(mensajeDeError(e, 'No se pudo registrar el paciente.'));
+          this.enviando.set(false);
+        },
+      });
+  }
+}

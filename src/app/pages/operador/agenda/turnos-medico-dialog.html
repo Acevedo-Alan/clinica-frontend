@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Turnos de {{ data.nombreMedico }}</h2>
+
+<mat-dialog-content>
+  @if (cargando()) {
+    <div class="centro"><mat-spinner diameter="36" /></div>
+  } @else if (error(); as e) {
+    <div class="aviso-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <span>{{ e }}</span>
+      <button mat-button (click)="cargar()">Reintentar</button>
+    </div>
+  } @else if (turnos().length === 0) {
+    <p class="vacio">No hay turnos cargados para ese día.</p>
+  } @else {
+    <table mat-table [dataSource]="turnos()" class="tabla">
+      <ng-container matColumnDef="hora">
+        <th mat-header-cell *matHeaderCellDef>Hora</th>
+        <td mat-cell *matCellDef="let t">{{ t.hora }}</td>
+      </ng-container>
+      <ng-container matColumnDef="paciente">
+        <th mat-header-cell *matHeaderCellDef>Paciente</th>
+        <td mat-cell *matCellDef="let t">{{ t.paciente_apellido }}, {{ t.paciente_nombre }}</td>
+      </ng-container>
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let t">
+          <span class="estado" [class]="t.estado">{{ t.estado }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let t" class="acciones">
+          @if (t.estado === 'confirmado') {
+            <button mat-icon-button matTooltip="Cancelar turno" (click)="cancelar(t)">
+              <mat-icon>event_busy</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+    </table>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="true">Cerrar</button>
+</mat-dialog-actions>

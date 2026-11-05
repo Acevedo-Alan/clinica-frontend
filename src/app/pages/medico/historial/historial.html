@@ -1,0 +1,116 @@
+<div class="pagina">
+  <h1>Historial de pacientes</h1>
+
+  <div class="filtros">
+    <mat-form-field>
+      <mat-label>DNI</mat-label>
+      <input
+        matInput
+        [ngModel]="filtroDni()"
+        (ngModelChange)="filtroDni.set($event)"
+        (keyup.enter)="buscar()"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Apellido</mat-label>
+      <input
+        matInput
+        [ngModel]="filtroApellido()"
+        (ngModelChange)="filtroApellido.set($event)"
+        (keyup.enter)="buscar()"
+      />
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" (click)="buscar()" [disabled]="buscando()">
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
+  </div>
+
+  @if (errorBusqueda(); as e) {
+    <div class="aviso-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <span>{{ e }}</span>
+    </div>
+  }
+
+  @if (buscando()) {
+    <div class="centro chico"><mat-spinner diameter="32" /></div>
+  } @else if (resultados(); as lista) {
+    @if (lista.length === 0) {
+      <p class="vacio">No se encontraron pacientes con esos datos.</p>
+    } @else {
+      <table mat-table [dataSource]="lista" class="tabla">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Paciente</th>
+          <td mat-cell *matCellDef="let p">{{ p.apellido }}, {{ p.nombre }}</td>
+        </ng-container>
+        <ng-container matColumnDef="dni">
+          <th mat-header-cell *matHeaderCellDef>DNI</th>
+          <td mat-cell *matCellDef="let p">{{ p.dni }}</td>
+        </ng-container>
+        <ng-container matColumnDef="fecha_nacimiento">
+          <th mat-header-cell *matHeaderCellDef>Fecha de nacimiento</th>
+          <td mat-cell *matCellDef="let p">{{ formatearFecha(p.fecha_nacimiento) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let p" class="acciones">
+            <button mat-button (click)="verHistorial(p)">
+              <mat-icon>assignment</mat-icon> Ver historial
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnas"
+          [class.seleccionada]="pacienteSeleccionado()?.id === row.id"
+        ></tr>
+      </table>
+    }
+  }
+
+  @if (pacienteSeleccionado(); as paciente) {
+    <mat-divider class="separador" />
+    <h2>Historial de {{ paciente.apellido }}, {{ paciente.nombre }}</h2>
+
+    @if (cargandoHistorial()) {
+      <div class="centro chico"><mat-spinner diameter="32" /></div>
+    } @else if (errorHistorial(); as e) {
+      <div class="aviso-error" role="alert">
+        <mat-icon>error</mat-icon>
+        <span>{{ e }}</span>
+      </div>
+    } @else if (historial().length === 0) {
+      <p class="vacio">No hay registros de historial clínico cargados por usted para este paciente.</p>
+    } @else {
+      <div class="registros">
+        @for (h of historial(); track h.id) {
+          <mat-card appearance="outlined" class="registro">
+            <div class="fecha">{{ formatearFecha(h.fecha_registro) }}</div>
+            <dl>
+              <div>
+                <dt>Diagnóstico</dt>
+                <dd>{{ h.diagnostico }}</dd>
+              </div>
+              @if (h.tratamiento) {
+                <div>
+                  <dt>Tratamiento</dt>
+                  <dd>{{ h.tratamiento }}</dd>
+                </div>
+              }
+              @if (h.observaciones) {
+                <div>
+                  <dt>Observaciones</dt>
+                  <dd>{{ h.observaciones }}</dd>
+                </div>
+              }
+            </dl>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

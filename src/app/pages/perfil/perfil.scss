@@ -31,6 +31,46 @@
   }
 }
 
+.cabecera-info {
+  flex: 1;
+}
+
+.btn-editar {
+  flex: none;
+  background: rgb(255 255 255 / 0.7);
+}
+
+.form-edicion,
+.seccion-password form {
+  padding: 24px 28px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 4px 16px;
+}
+
+.btn-ver-password {
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+.acciones-form {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+
+  button[type='submit'] mat-spinner {
+    display: inline-block;
+  }
+}
+
+.seccion-password {
+  padding: 4px 28px 24px;
+}
+
 .avatar {
   display: grid;
   place-items: center;

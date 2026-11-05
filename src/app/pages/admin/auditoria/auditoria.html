@@ -1,0 +1,104 @@
+<div class="pagina">
+  <h1>Auditoría</h1>
+
+  <div class="filtros">
+    <mat-form-field>
+      <mat-label>Usuario</mat-label>
+      <input
+        matInput
+        [ngModel]="filtroUsuario()"
+        (ngModelChange)="filtroUsuario.set($event)"
+        (keyup.enter)="buscar()"
+        placeholder="Nombre o apellido"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Entidad</mat-label>
+      <mat-select [ngModel]="filtroEntidad()" (ngModelChange)="filtroEntidad.set($event); buscar()">
+        <mat-option value="">Todas</mat-option>
+        @for (ent of entidades; track ent) {
+          <mat-option [value]="ent">{{ ent }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Desde</mat-label>
+      <input
+        matInput
+        [matDatepicker]="selectorDesde"
+        [ngModel]="filtroDesde()"
+        (ngModelChange)="filtroDesde.set($event); buscar()"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="selectorDesde" />
+      <mat-datepicker #selectorDesde startView="multi-year" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Hasta</mat-label>
+      <input
+        matInput
+        [matDatepicker]="selectorHasta"
+        [ngModel]="filtroHasta()"
+        (ngModelChange)="filtroHasta.set($event); buscar()"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="selectorHasta" />
+      <mat-datepicker #selectorHasta startView="multi-year" />
+    </mat-form-field>
+
+    <button mat-stroked-button (click)="buscar()">
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
+  </div>
+
+  @if (cargando()) {
+    <div class="centro"><mat-spinner diameter="40" /></div>
+  } @else if (error(); as e) {
+    <div class="aviso-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <span>{{ e }}</span>
+      <button mat-button (click)="cargar()">Reintentar</button>
+    </div>
+  } @else if (registros().length === 0) {
+    <p class="vacio">No hay registros de auditoría para mostrar.</p>
+  } @else {
+    <table mat-table [dataSource]="registros()" class="tabla">
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let r">{{ fechaHora(r.fecha) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="usuario">
+        <th mat-header-cell *matHeaderCellDef>Usuario</th>
+        <td mat-cell *matCellDef="let r">{{ nombreUsuario(r) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="accion">
+        <th mat-header-cell *matHeaderCellDef>Acción</th>
+        <td mat-cell *matCellDef="let r">
+          <span class="chip" [class]="r.accion.toLowerCase()">{{ r.accion }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="entidad">
+        <th mat-header-cell *matHeaderCellDef>Entidad</th>
+        <td mat-cell *matCellDef="let r">{{ r.entidad }}</td>
+      </ng-container>
+      <ng-container matColumnDef="detalle">
+        <th mat-header-cell *matHeaderCellDef>Detalle</th>
+        <td mat-cell *matCellDef="let r" class="detalle" [title]="r.detalle ?? ''">
+          {{ r.detalle ?? '—' }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="total()"
+      [pageSize]="tamanioPagina()"
+      [pageIndex]="pagina()"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="paginaCambiada($event)"
+    />
+  }
+</div>

@@ -1,0 +1,325 @@
+<div class="pagina pagina-turnos-operador">
+  <div class="cabecera">
+    <div class="icono-cabecera"><mat-icon>event_available</mat-icon></div>
+    <div>
+      <h1>Asignar turno</h1>
+      <p>Buscá un paciente y elegí especialidad, médico, fecha y horario</p>
+    </div>
+  </div>
+
+  @if (cargandoInicial()) {
+    <div class="centro"><mat-spinner diameter="40" /></div>
+  } @else if (errorInicial(); as e) {
+    <div class="aviso-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <span>{{ e }}</span>
+      <button mat-button type="button" (click)="cargarInicial()">Reintentar</button>
+    </div>
+  } @else {
+    <mat-card class="tarjeta-formulario" appearance="raised">
+      <mat-stepper #stepper linear orientation="horizontal">
+        <!-- 1. Buscar paciente -->
+        <mat-step [completed]="pacienteId() !== null" label="Paciente">
+          <div class="paso">
+            <div class="filtros">
+              <mat-form-field>
+                <mat-label>DNI</mat-label>
+                <input
+                  matInput
+                  [ngModel]="filtroDni()"
+                  (ngModelChange)="filtroDni.set($event)"
+                  (keyup.enter)="buscarPaciente()"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Apellido</mat-label>
+                <input
+                  matInput
+                  [ngModel]="filtroApellido()"
+                  (ngModelChange)="filtroApellido.set($event)"
+                  (keyup.enter)="buscarPaciente()"
+                />
+              </mat-form-field>
+              <button mat-flat-button color="primary" type="button" (click)="buscarPaciente()" [disabled]="buscando()">
+                <mat-icon>search</mat-icon>
+                Buscar
+              </button>
+            </div>
+
+            @if (errorBusqueda(); as e) {
+              <div class="aviso-error" role="alert">
+                <mat-icon>error</mat-icon>
+                <span>{{ e }}</span>
+              </div>
+            }
+
+            @if (buscando()) {
+              <div class="centro chico"><mat-spinner diameter="32" /></div>
+            } @else if (resultados(); as lista) {
+              @if (lista.length === 0) {
+                <p class="vacio">No se encontraron pacientes con esos datos.</p>
+              } @else {
+                <table mat-table [dataSource]="lista" class="tabla">
+                  <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef>Paciente</th>
+                    <td mat-cell *matCellDef="let p">{{ p.apellido }}, {{ p.nombre }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="dni">
+                    <th mat-header-cell *matHeaderCellDef>DNI</th>
+                    <td mat-cell *matCellDef="let p">{{ p.dni }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let p" class="acciones">
+                      <button mat-button type="button" (click)="elegirPaciente(p)">
+                        <mat-icon>check</mat-icon> Elegir
+                      </button>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="['nombre', 'dni', 'acciones']"></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: ['nombre', 'dni', 'acciones']"
+                    [class.seleccionada]="pacienteId() === row.id"
+                  ></tr>
+                </table>
+              }
+            }
+          </div>
+        </mat-step>
+
+        <!-- 2. Especialidad -->
+        <mat-step [completed]="especialidadId() !== null" label="Especialidad">
+          <div class="paso">
+            <div class="opciones">
+              @for (esp of especialidades(); track esp.id) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="opcion"
+                  [class.seleccionada]="especialidadId() === esp.id"
+                  (click)="elegirEspecialidad(esp.id)"
+                >
+                  <mat-icon>local_hospital</mat-icon>
+                  {{ esp.descripcion }}
+                </button>
+              }
+            </div>
+            @if (especialidades().length === 0) {
+              <p class="vacio">No hay especialidades configuradas todavía.</p>
+            }
+            <button mat-button type="button" matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon> Atrás
+            </button>
+          </div>
+        </mat-step>
+
+        <!-- 3. Médico -->
+        <mat-step [completed]="medicoId() !== null" label="Médico">
+          <div class="paso">
+            @if (cargandoMedicos()) {
+              <div class="centro chico"><mat-spinner diameter="32" /></div>
+            } @else if (errorMedicos(); as e) {
+              <div class="aviso-error" role="alert">
+                <mat-icon>error</mat-icon>
+                <span>{{ e }}</span>
+              </div>
+            } @else {
+              <div class="opciones">
+                @for (medico of medicos(); track medico.id) {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    class="opcion"
+                    [class.seleccionada]="medicoId() === medico.id"
+                    (click)="elegirMedico(medico.id)"
+                  >
+                    <mat-icon>person</mat-icon>
+                    {{ medico.apellido }}, {{ medico.nombre }}
+                  </button>
+                }
+              </div>
+              @if (medicos().length === 0) {
+                <p class="vacio">No hay médicos de esa especialidad en tu sede.</p>
+              }
+            }
+            <button mat-button type="button" matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon> Atrás
+            </button>
+          </div>
+        </mat-step>
+
+        <!-- 4. Fecha -->
+        <mat-step [completed]="fechaElegida() !== null" label="Fecha">
+          <div class="paso">
+            @if (cargandoFechas()) {
+              <div class="centro chico"><mat-spinner diameter="32" /></div>
+            } @else if (errorFechas(); as e) {
+              <div class="aviso-error" role="alert">
+                <mat-icon>error</mat-icon>
+                <span>{{ e }}</span>
+              </div>
+            } @else {
+              <div class="opciones">
+                @for (fecha of fechas(); track fecha) {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    class="opcion"
+                    [class.seleccionada]="fechaElegida() === fecha"
+                    (click)="elegirFecha(fecha)"
+                  >
+                    <mat-icon>event</mat-icon>
+                    {{ formatearFecha(fecha) }}
+                  </button>
+                }
+              </div>
+              @if (fechas().length === 0) {
+                <p class="vacio">Ese médico no tiene fechas disponibles en esa especialidad.</p>
+              }
+            }
+            <button mat-button type="button" matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon> Atrás
+            </button>
+          </div>
+        </mat-step>
+
+        <!-- 5. Horario -->
+        <mat-step [completed]="horaElegida() !== null" label="Horario">
+          <div class="paso">
+            @if (cargandoHorarios()) {
+              <div class="centro chico"><mat-spinner diameter="32" /></div>
+            } @else {
+              @if (errorHorarios(); as e) {
+                <div class="aviso-error" role="alert">
+                  <mat-icon>error</mat-icon>
+                  <span>{{ e }}</span>
+                </div>
+              }
+              <div class="opciones">
+                @for (hora of horarios(); track hora) {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    class="opcion opcion-hora"
+                    [class.seleccionada]="horaElegida() === hora"
+                    (click)="elegirHora(hora)"
+                  >
+                    {{ hora }}
+                  </button>
+                }
+              </div>
+              @if (horarios().length === 0) {
+                <p class="vacio">No quedan horarios libres ese día. Probá otra fecha.</p>
+              }
+            }
+            <button mat-button type="button" matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon> Atrás
+            </button>
+          </div>
+        </mat-step>
+
+        <!-- 6. Nota y confirmación -->
+        <mat-step label="Confirmar">
+          <div class="paso">
+            @if (turnoConfirmado(); as turno) {
+              <div class="aviso-ok" role="status">
+                <mat-icon>check_circle</mat-icon>
+                <span>
+                  ¡Turno confirmado para el {{ formatearFecha(turno.fecha) }} a las
+                  {{ turno.hora }}!
+                </span>
+              </div>
+              <button mat-flat-button type="button" (click)="asignarOtroTurno()">
+                Asignar otro turno
+              </button>
+            } @else {
+              <div class="resumen">
+                <h2>Resumen</h2>
+                <dl>
+                  <div>
+                    <dt><mat-icon>person</mat-icon> Paciente</dt>
+                    <dd>
+                      {{ pacienteElegido()?.apellido }}, {{ pacienteElegido()?.nombre }} (DNI
+                      {{ pacienteElegido()?.dni }})
+                    </dd>
+                  </div>
+                  <div>
+                    <dt><mat-icon>local_hospital</mat-icon> Especialidad</dt>
+                    <dd>{{ especialidadElegida()?.descripcion }}</dd>
+                  </div>
+                  <div>
+                    <dt><mat-icon>person</mat-icon> Médico</dt>
+                    <dd>{{ medicoElegido()?.apellido }}, {{ medicoElegido()?.nombre }}</dd>
+                  </div>
+                  <div>
+                    <dt><mat-icon>apartment</mat-icon> Sede</dt>
+                    <dd>{{ sedePropia()?.nombre }}</dd>
+                  </div>
+                  <div>
+                    <dt><mat-icon>event</mat-icon> Fecha y hora</dt>
+                    <dd>{{ formatearFecha(fechaElegida()) }} — {{ horaElegida() }}</dd>
+                  </div>
+                  <div>
+                    <dt><mat-icon>health_and_safety</mat-icon> Cobertura</dt>
+                    <dd>{{ nombreCobertura() ?? 'Sin cobertura asignada' }}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <mat-divider />
+
+              @if (!nombreCobertura()) {
+                <div class="aviso-error" role="alert">
+                  <mat-icon>error</mat-icon>
+                  <span>Este paciente no tiene una cobertura asignada: no se puede confirmar el turno.</span>
+                </div>
+              }
+
+              <mat-form-field class="completo">
+                <mat-label>Motivo de la consulta</mat-label>
+                <textarea
+                  matInput
+                  rows="3"
+                  [ngModel]="nota()"
+                  (ngModelChange)="nota.set($event)"
+                  maxlength="500"
+                  required
+                ></textarea>
+                <mat-hint>Describí brevemente el motivo de la consulta</mat-hint>
+              </mat-form-field>
+
+              @if (errorEnvio(); as e) {
+                <div class="aviso-error" role="alert">
+                  <mat-icon>error</mat-icon>
+                  <span>{{ e }}</span>
+                  <button mat-button type="button" (click)="elegirOtroHorario()">
+                    Elegir otro horario
+                  </button>
+                </div>
+              }
+
+              <div class="acciones-confirmar">
+                <button mat-button type="button" matStepperPrevious [disabled]="enviando()">
+                  <mat-icon>arrow_back</mat-icon> Atrás
+                </button>
+                <button
+                  mat-flat-button
+                  type="button"
+                  (click)="confirmar()"
+                  [disabled]="enviando() || !nota().trim() || !nombreCobertura()"
+                >
+                  @if (enviando()) {
+                    <mat-spinner diameter="20" />
+                  } @else {
+                    Confirmar turno
+                  }
+                </button>
+              </div>
+            }
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </mat-card>
+  }
+</div>

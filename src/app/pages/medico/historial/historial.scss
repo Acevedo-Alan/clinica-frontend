@@ -1,0 +1,91 @@
+h1 {
+  margin: 0 0 20px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    width: 220px;
+  }
+
+  button {
+    margin-top: 8px;
+  }
+}
+
+.centro {
+  display: grid;
+  place-items: center;
+  padding: 64px 0;
+
+  &.chico {
+    padding: 32px 0;
+  }
+}
+
+.tabla {
+  width: 100%;
+}
+
+.seleccionada {
+  background: var(--mat-sys-primary-container);
+}
+
+.acciones {
+  text-align: right;
+}
+
+.separador {
+  margin: 28px 0 20px;
+}
+
+.registros {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.registro {
+  padding: 16px;
+
+  .fecha {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 8px;
+  }
+
+  dl {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+  }
+
+  dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  dd {
+    margin: 2px 0 0;
+  }
+}
+
+.vacio {
+  padding: 24px 0;
+  color: var(--mat-sys-on-surface-variant);
+}

@@ -11,44 +11,175 @@
     <mat-card class="tarjeta-perfil" appearance="raised">
       <div class="cabecera">
         <div class="avatar" aria-hidden="true">{{ iniciales() }}</div>
-        <div>
+        <div class="cabecera-info">
           <h1>{{ d.nombre }} {{ d.apellido }}</h1>
           <span class="rol"><mat-icon inline>verified_user</mat-icon> {{ etiquetaRol[d.rol] }}</span>
         </div>
+        @if (d.rol === 'paciente' && !editando()) {
+          <button mat-stroked-button class="btn-editar" (click)="editar()">
+            <mat-icon>edit</mat-icon> Editar datos
+          </button>
+        }
       </div>
 
       <mat-divider />
 
-      <dl class="datos">
-        <div>
-          <dt><mat-icon>badge</mat-icon> DNI</dt>
-          <dd>{{ d.dni }}</dd>
-        </div>
-        <div>
-          <dt><mat-icon>mail</mat-icon> Email</dt>
-          <dd>{{ d.email }}</dd>
-        </div>
-        <div>
-          <dt><mat-icon>call</mat-icon> Teléfono</dt>
-          <dd>{{ d.telefono || '—' }}</dd>
-        </div>
-        <div>
-          <dt><mat-icon>cake</mat-icon> Fecha de nacimiento</dt>
-          <dd>{{ formatearFecha(d.fecha_nacimiento) }}</dd>
-        </div>
-        @if (nombreCobertura(); as cob) {
-          <div>
-            <dt><mat-icon>health_and_safety</mat-icon> Cobertura</dt>
-            <dd>{{ cob }}</dd>
+      @if (editando()) {
+        <form class="form-edicion" [formGroup]="formDatos" (ngSubmit)="guardarDatos()">
+          <div class="form-grid">
+            <mat-form-field>
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" maxlength="30" />
+              @if (formDatos.get('email')?.touched && formDatos.get('email')?.hasError('required')) {
+                <mat-error>El email es obligatorio.</mat-error>
+              } @else if (formDatos.get('email')?.touched && formDatos.get('email')?.hasError('pattern')) {
+                <mat-error>Ingresá un email válido.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Teléfono</mat-label>
+              <input matInput formControlName="telefono" maxlength="15" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Cobertura</mat-label>
+              <mat-select formControlName="id_cobertura">
+                @for (c of coberturas(); track c.id) {
+                  <mat-option [value]="c.id">{{ c.nombre }}</mat-option>
+                }
+              </mat-select>
+              @if (formDatos.get('id_cobertura')?.touched && formDatos.get('id_cobertura')?.hasError('required')) {
+                <mat-error>Seleccioná una cobertura.</mat-error>
+              }
+            </mat-form-field>
           </div>
-        }
-        @if (d.id_sede != null) {
-          <div>
-            <dt><mat-icon>apartment</mat-icon> Sede asignada</dt>
-            <dd>Sede N.º {{ d.id_sede }}</dd>
+
+          @if (errorDatos(); as ed) {
+            <div class="aviso-error" role="alert">
+              <mat-icon>error</mat-icon>
+              <span>{{ ed }}</span>
+            </div>
+          }
+
+          <div class="acciones-form">
+            <button mat-button type="button" (click)="cancelarEdicion()">Cancelar</button>
+            <button mat-flat-button type="submit" [disabled]="guardandoDatos()">
+              @if (guardandoDatos()) {
+                <mat-spinner diameter="20" />
+              } @else {
+                Guardar
+              }
+            </button>
           </div>
-        }
-      </dl>
+        </form>
+
+        <mat-divider />
+
+        <div class="seccion-password">
+          @if (!cambiandoPassword()) {
+            <button mat-button (click)="cambiandoPassword.set(true)">
+              <mat-icon>lock</mat-icon> Cambiar contraseña
+            </button>
+          } @else {
+            <form [formGroup]="formPassword" (ngSubmit)="guardarPassword()">
+              <div class="form-grid">
+                <mat-form-field>
+                  <mat-label>Contraseña actual</mat-label>
+                  <input
+                    matInput
+                    [type]="verPasswords() ? 'text' : 'password'"
+                    formControlName="passwordActual"
+                  />
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Nueva contraseña</mat-label>
+                  <input
+                    matInput
+                    [type]="verPasswords() ? 'text' : 'password'"
+                    formControlName="passwordNueva"
+                  />
+                  @if (formPassword.get('passwordNueva')?.touched && formPassword.get('passwordNueva')?.hasError('minlength')) {
+                    <mat-error>Debe tener al menos 8 caracteres.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Repetir nueva contraseña</mat-label>
+                  <input
+                    matInput
+                    [type]="verPasswords() ? 'text' : 'password'"
+                    formControlName="confirmarPassword"
+                  />
+                  @if (formPassword.get('confirmarPassword')?.touched && formPassword.hasError('passwordsNoCoinciden')) {
+                    <mat-error>Las contraseñas no coinciden.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <button
+                mat-button
+                type="button"
+                class="btn-ver-password"
+                (click)="verPasswords.set(!verPasswords())"
+              >
+                <mat-icon>{{ verPasswords() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                {{ verPasswords() ? 'Ocultar' : 'Mostrar' }} contraseñas
+              </button>
+
+              @if (errorPassword(); as ep) {
+                <div class="aviso-error" role="alert">
+                  <mat-icon>error</mat-icon>
+                  <span>{{ ep }}</span>
+                </div>
+              }
+
+              <div class="acciones-form">
+                <button mat-button type="button" (click)="cancelarPassword()">Cancelar</button>
+                <button mat-flat-button type="submit" [disabled]="guardandoPassword()">
+                  @if (guardandoPassword()) {
+                    <mat-spinner diameter="20" />
+                  } @else {
+                    Actualizar contraseña
+                  }
+                </button>
+              </div>
+            </form>
+          }
+        </div>
+      } @else {
+        <dl class="datos">
+          <div>
+            <dt><mat-icon>badge</mat-icon> DNI</dt>
+            <dd>{{ d.dni }}</dd>
+          </div>
+          <div>
+            <dt><mat-icon>mail</mat-icon> Email</dt>
+            <dd>{{ d.email }}</dd>
+          </div>
+          <div>
+            <dt><mat-icon>call</mat-icon> Teléfono</dt>
+            <dd>{{ d.telefono || '—' }}</dd>
+          </div>
+          <div>
+            <dt><mat-icon>cake</mat-icon> Fecha de nacimiento</dt>
+            <dd>{{ formatearFecha(d.fecha_nacimiento) }}</dd>
+          </div>
+          @if (nombreCobertura(); as cob) {
+            <div>
+              <dt><mat-icon>health_and_safety</mat-icon> Cobertura</dt>
+              <dd>{{ cob }}</dd>
+            </div>
+          }
+          @if (d.id_sede != null) {
+            <div>
+              <dt><mat-icon>apartment</mat-icon> Sede asignada</dt>
+              <dd>Sede N.º {{ d.id_sede }}</dd>
+            </div>
+          }
+        </dl>
+      }
     </mat-card>
   }
 </div>

@@ -1,0 +1,78 @@
+h1 {
+  margin: 0 0 20px;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  mat-form-field {
+    width: 200px;
+  }
+
+  button {
+    margin-top: 8px;
+  }
+}
+
+.centro {
+  display: grid;
+  place-items: center;
+  padding: 64px 0;
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.tarjeta {
+  border-radius: var(--clinica-radius);
+}
+
+.vacio {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.tabla-ranking {
+  width: 100%;
+}
+
+.contenedor-grafico {
+  height: 240px;
+}
+
+.cancelacion {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.mini-grafico {
+  flex: none;
+  width: 180px;
+  height: 180px;
+}
+
+.porcentaje {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .numero {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .detalle {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.9rem;
+  }
+}

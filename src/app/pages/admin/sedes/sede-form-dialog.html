@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>{{ data ? 'Modificar sede' : 'Nueva sede' }}</h2>
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <mat-dialog-content class="contenido">
+    <mat-form-field>
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" maxlength="50" />
+      @if (form.controls.nombre.hasError('required')) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="direccion" maxlength="100" />
+      @if (form.controls.direccion.hasError('required')) {
+        <mat-error>La dirección es obligatoria</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" maxlength="15" />
+      @if (form.controls.telefono.hasError('required')) {
+        <mat-error>El teléfono es obligatorio</mat-error>
+      }
+    </mat-form-field>
+    @if (error(); as e) {
+      <p class="error">{{ e }}</p>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [mat-dialog-close]="null">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || guardando()">
+      @if (guardando()) {
+        <mat-spinner diameter="20" />
+      } @else {
+        Guardar
+      }
+    </button>
+  </mat-dialog-actions>
+</form>
