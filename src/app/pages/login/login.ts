@@ -1,7 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -15,7 +14,6 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -42,6 +40,17 @@ export class Login {
   protected readonly enviando = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly verPassword = signal(false);
+  protected readonly ayudaClave = signal(false);
+
+  /** El DNI va sin puntos ni espacios: se descarta todo lo que no sea un dígito mientras se escribe o pega. */
+  protected soloDigitos(evento: Event): void {
+    const campo = evento.target as HTMLInputElement;
+    const limpio = campo.value.replace(/[^0-9]/g, '');
+    if (limpio !== campo.value) {
+      campo.value = limpio;
+      this.form.controls.dni.setValue(limpio);
+    }
+  }
 
   protected enviar(): void {
     if (this.form.invalid) {

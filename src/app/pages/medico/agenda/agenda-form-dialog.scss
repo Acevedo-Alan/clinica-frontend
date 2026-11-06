@@ -16,3 +16,20 @@
   color: var(--mat-sys-error);
   font-size: 0.85rem;
 }
+
+.repeticion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.etiqueta-dias {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+}

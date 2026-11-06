@@ -19,35 +19,159 @@
     </div>
   </section>
 } @else {
-  <section class="hero">
-    <div class="hero-contenido">
-      <p class="etiqueta">Clínica Virtual</p>
-      <h1>Tu salud, a un clic de distancia.</h1>
-      <p class="bajada">
-        Sacá turnos médicos online, seguí tu historial clínico y recibí avisos de tus consultas. Iniciá sesión o
-        registrate para empezar.
-      </p>
-      <div class="acciones">
-        <a mat-flat-button routerLink="/login" class="btn-primario">
-          <mat-icon>login</mat-icon> Iniciar sesión
-        </a>
-        <a mat-stroked-button routerLink="/registro" class="btn-secundario">
-          <mat-icon>person_add</mat-icon> Registrarme
-        </a>
+  <div class="topbar">
+    <div class="topbar-contenido">
+      <a href="tel:+543424000001"><mat-icon inline>call</mat-icon> 342 400-0001</a>
+      <span class="emergencia"><mat-icon inline>emergency</mat-icon> Urgencias 24 hs: <a href="tel:107">107</a></span>
+      <span class="solo-escritorio"><mat-icon inline>schedule</mat-icon> Lun a Vie 7:00 a 20:00 · Sáb 8:00 a 13:00</span>
+    </div>
+  </div>
+
+  <section class="hero hero-publico">
+    <div class="hero-contenido hero-dos">
+      <div>
+        <p class="etiqueta">IES · Institución de Especialidades en Salud</p>
+        <h1>Tu salud, a un clic de distancia.</h1>
+        <p class="bajada">
+          Sacá turnos médicos online, seguí tu historial clínico y recibí avisos de tus consultas. Iniciá sesión o
+          registrate para empezar.
+        </p>
+        <div class="acciones">
+          <a mat-flat-button routerLink="/registro" class="btn-primario">
+            <mat-icon>event_available</mat-icon> Sacar turno
+          </a>
+          <a mat-stroked-button routerLink="/login" class="btn-secundario">
+            <mat-icon>login</mat-icon> Iniciar sesión
+          </a>
+        </div>
+      </div>
+      <div class="hero-caja">
+        <img
+          class="hero-foto"
+          src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=900&h=700&q=80"
+          alt="Médica conversando con una paciente durante la consulta"
+          width="900"
+          height="700"
+          fetchpriority="high"
+        />
       </div>
     </div>
   </section>
 
-  <section class="pagina">
-    <h2 class="titulo-seccion">¿Qué podés hacer como paciente registrado?</h2>
-    <div class="grilla">
-      @for (f of funcionalidades; track f.titulo) {
-        <article class="tarjeta">
-          <span class="tarjeta-icono"><mat-icon>{{ f.icono }}</mat-icon></span>
-          <h3>{{ f.titulo }}</h3>
-          <p>{{ f.texto }}</p>
-        </article>
+  <section class="cifras" aria-label="La clínica en números">
+    <div class="cifras-contenido">
+      @for (c of cifras(); track c.texto) {
+        <div class="cifra">
+          <strong>{{ c.valor }}</strong>
+          <span>{{ c.texto }}</span>
+        </div>
       }
     </div>
   </section>
+
+  <section class="seccion">
+    <div class="interior">
+      <h2 class="titulo-seccion">¿Qué podés hacer como paciente registrado?</h2>
+      <div class="grilla">
+        @for (f of funcionalidades; track f.titulo) {
+          <article class="tarjeta">
+            <span class="tarjeta-icono"><mat-icon>{{ f.icono }}</mat-icon></span>
+            <h3>{{ f.titulo }}</h3>
+            <p>{{ f.texto }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="interior">
+      <h2 class="titulo-seccion">Especialidades</h2>
+      <p class="subtitulo">Atención de calidad en las principales áreas de la medicina.</p>
+      <div class="grilla-chica">
+        @for (e of especialidades(); track e.nombre) {
+          <a class="especialidad" routerLink="/registro">
+            <span class="tarjeta-icono"><mat-icon>{{ e.icono }}</mat-icon></span>
+            <span>{{ e.nombre }}</span>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="interior">
+      <h2 class="titulo-seccion">Nuestros médicos</h2>
+      <p class="subtitulo">Profesionales matriculados que te acompañan en cada consulta.</p>
+      <div class="grilla-medicos">
+        @for (m of medicos(); track m.nombre) {
+          <article class="medico">
+            @if (m.foto) {
+              <img [src]="m.foto" [alt]="'Foto de ' + m.nombre" width="400" height="400" loading="lazy" />
+            } @else {
+              <div class="iniciales" aria-hidden="true">{{ m.iniciales }}</div>
+            }
+            <div class="medico-datos">
+              <h3>{{ m.nombre }}</h3>
+              <p>{{ m.especialidad }}</p>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="interior">
+      <h2 class="titulo-seccion">Nuestras sedes</h2>
+      <p class="subtitulo">Encontrá la más cercana a vos.</p>
+      <div class="grilla-sedes">
+        @for (s of sedes(); track s.nombre) {
+          <article class="sede">
+            <img [src]="s.foto" [alt]="'Interior de la ' + s.nombre" width="700" height="360" loading="lazy" />
+            <div class="sede-datos">
+              <h3>{{ s.nombre }}</h3>
+              <p><mat-icon inline>location_on</mat-icon> {{ s.direccion }}</p>
+              <p><mat-icon inline>call</mat-icon> {{ s.telefono }}</p>
+              <p><mat-icon inline>schedule</mat-icon> {{ s.horario }}</p>
+              <a
+                class="enlace"
+                target="_blank"
+                rel="noopener"
+                [href]="'https://www.google.com/maps/search/?api=1&query=' + s.mapa"
+              >
+                Ver en el mapa <mat-icon inline>arrow_outward</mat-icon>
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="interior">
+      <h2 class="titulo-seccion">Coberturas y obras sociales</h2>
+      <p class="subtitulo">Trabajamos con las principales obras sociales y prepagas. Consultá por otras.</p>
+      <ul class="coberturas">
+        @for (c of coberturas(); track c) {
+          <li><mat-icon inline>verified</mat-icon> {{ c }}</li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="llamado">
+    <div class="llamado-contenido">
+      <h2>¿Listo para cuidar tu salud?</h2>
+      <p>Creá tu cuenta en un minuto y sacá tu primer turno hoy.</p>
+      <a mat-flat-button routerLink="/registro" class="btn-primario">
+        <mat-icon>person_add</mat-icon> Registrarme
+      </a>
+    </div>
+  </section>
+
+  <a mat-fab extended routerLink="/registro" class="flotante" aria-label="Sacar turno">
+    <mat-icon>event_available</mat-icon> Sacar turno
+  </a>
 }

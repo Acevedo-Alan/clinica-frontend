@@ -23,6 +23,11 @@ html {
   --clinica-gradient: linear-gradient(135deg, #006874 0%, #0b5f9e 100%);
   --clinica-max: 1120px;
 
+  /* Un único azul petróleo primario (el mismo del header) en botones, foco y enlaces */
+  --mat-sys-primary: #006874;
+  --mat-sys-on-primary: #fff;
+  --mat-sys-surface-tint: #006874;
+
   /* Contenedores más suaves que el cian saturado de la paleta M3 */
   --mat-sys-primary-container: #cdeef2;
   --mat-sys-on-primary-container: #00363d;

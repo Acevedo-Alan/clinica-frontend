@@ -1,8 +1,11 @@
-<footer class="pie">
+<footer class="pie" [class.pie-minimo]="minimo()">
+  @if (!minimo()) {
   <div class="contenido">
     <section class="bloque marca-bloque">
-      <p class="titulo"><mat-icon>medical_services</mat-icon> Clínica Virtual</p>
-      <p class="texto">Turnos médicos online, sin filas y sin llamadas.</p>
+      <p class="titulo"><img class="logo-img" src="logo.svg" alt="" width="18" height="24" /> IES</p>
+      <p class="texto">
+        Institución de Especialidades en Salud.<br />Turnos médicos online, sin filas y sin llamadas.
+      </p>
     </section>
 
     <section class="bloque">
@@ -20,22 +23,23 @@
       <h2>Contacto</h2>
       <p class="texto">
         <mat-icon inline>mail</mat-icon>
-        <a href="mailto:contacto@clinicavirtual.com.ar">contacto&#64;clinicavirtual.com.ar</a>
+        <a href="mailto:contacto@ies.com.ar">contacto&#64;ies.com.ar</a>
       </p>
       <p class="texto"><mat-icon inline>call</mat-icon> <a href="tel:+543424000001">342 400-0001</a></p>
       <h2 class="redes-titulo">Redes sociales</h2>
       <p class="texto redes">
-        <a href="https://instagram.com/clinicavirtual" target="_blank" rel="noopener">
+        <a href="https://instagram.com/ies.salud" target="_blank" rel="noopener">
           <mat-icon inline>photo_camera</mat-icon> Instagram
         </a>
-        <a href="https://facebook.com/clinicavirtual" target="_blank" rel="noopener">
+        <a href="https://facebook.com/ies.salud" target="_blank" rel="noopener">
           <mat-icon inline>thumb_up</mat-icon> Facebook
         </a>
-        <a href="https://x.com/clinicavirtual" target="_blank" rel="noopener">
+        <a href="https://x.com/ies_salud" target="_blank" rel="noopener">
           <mat-icon inline>alternate_email</mat-icon> X
         </a>
       </p>
     </section>
   </div>
-  <p class="legal">© {{ anio }} Clínica Virtual · Santa Fe, Argentina</p>
+  }
+  <p class="legal">© {{ anio }} IES – Institución de Especialidades en Salud · Santa Fe, Argentina</p>
 </footer>

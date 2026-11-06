@@ -216,6 +216,23 @@ export interface Turno {
 }
 
 /** Alta/modificación de un rango de agenda (`POST`/`PUT /agenda`): sin nombres resueltos. */
+export interface AgendaRecurrente {
+  hora_entrada: string;
+  hora_salida: string;
+  fecha_desde: string;
+  fecha_hasta: string;
+  /** 1 = lunes ... 7 = domingo */
+  dias_semana: number[];
+  id_medico: number;
+  id_especialidad: number;
+  id_sede: number;
+}
+
+export interface ResultadoAgendaRecurrente {
+  creadas: { id: number; fecha: string }[];
+  omitidas: { fecha: string; motivo: string }[];
+}
+
 export interface AgendaNueva {
   /** Formato HH:mm */
   hora_entrada: string;

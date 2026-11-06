@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,7 +6,10 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
+import { rutaDe } from '../../../core/config/menu.config';
 import { HistorialClinico, TurnoMio } from '../../../core/models/api.models';
 import { AuthService } from '../../../core/services/auth.service';
 import { HistorialService } from '../../../core/services/historial.service';
@@ -22,7 +25,9 @@ import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatTableModule,
+    MatTabsModule,
     MatTooltipModule,
+    RouterLink,
   ],
   templateUrl: './mis-turnos.html',
   styleUrl: './mis-turnos.scss',
@@ -34,9 +39,19 @@ export class MisTurnos {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
-  protected readonly columnas = ['fecha', 'hora', 'estado', 'acciones'];
+  protected readonly columnas = [
+    'fecha',
+    'hora',
+    'especialidad',
+    'profesional',
+    'estado',
+    'acciones',
+    'expandir',
+  ];
   protected readonly formatearFecha = formatearFecha;
+  protected readonly rutaSolicitar = rutaDe('paciente', 'solicitar-turno');
 
+  protected readonly pestania = signal<'proximos' | 'historial'>('proximos');
   protected readonly turnos = signal<TurnoMio[]>([]);
   protected readonly total = signal(0);
   protected readonly pagina = signal(0);
@@ -44,6 +59,9 @@ export class MisTurnos {
   protected readonly cargando = signal(true);
   protected readonly error = signal<string | null>(null);
   protected readonly expandidoId = signal<number | null>(null);
+
+  /** Un envoltorio por turno: permite dos filas (principal y detalle) por registro con multiTemplateDataRows. */
+  protected readonly filas = computed(() => this.turnos().map((turno) => ({ turno })));
 
   private readonly historialPorTurno = signal<Map<number, HistorialClinico>>(new Map());
 
@@ -63,7 +81,7 @@ export class MisTurnos {
   protected cargar(): void {
     this.cargando.set(true);
     this.error.set(null);
-    this.turnoSrv.misTurnos(this.pagina() + 1, this.tamanioPagina()).subscribe({
+    this.turnoSrv.misTurnos(this.pagina() + 1, this.tamanioPagina(), this.pestania()).subscribe({
       next: (resultado) => {
         this.turnos.set(resultado.items);
         this.total.set(resultado.total);
@@ -74,6 +92,15 @@ export class MisTurnos {
         this.cargando.set(false);
       },
     });
+  }
+
+  protected cambiarPestania(indice: number): void {
+    const destino = indice === 0 ? 'proximos' : 'historial';
+    if (destino === this.pestania()) return;
+    this.pestania.set(destino);
+    this.pagina.set(0);
+    this.expandidoId.set(null);
+    this.cargar();
   }
 
   protected paginaCambiada(evento: PageEvent): void {
@@ -95,10 +122,8 @@ export class MisTurnos {
       .subscribe((confirmado?: boolean) => {
         if (!confirmado) return;
         this.turnoSrv.cancelar(turno.id).subscribe({
-          next: () =>
-            this.turnos.update((lista) =>
-              lista.map((t) => (t.id === turno.id ? { ...t, estado: 'cancelado' } : t)),
-            ),
+          // El turno pasa al historial: se recarga la lista de próximos.
+          next: () => this.cargar(),
           error: (e: unknown) =>
             this.snackBar.open(mensajeDeError(e, 'No se pudo cancelar el turno.'), 'Cerrar', {
               duration: 5000,

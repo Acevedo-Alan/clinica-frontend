@@ -2,7 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AgendaNueva, ApiResponse, BloqueAgenda } from '../models/api.models';
+import {
+  AgendaNueva,
+  AgendaRecurrente,
+  ApiResponse,
+  BloqueAgenda,
+  ResultadoAgendaRecurrente,
+} from '../models/api.models';
 
 export interface FiltrosAgenda {
   id_medico?: number;
@@ -32,6 +38,13 @@ export class AgendaService {
   crear(datos: AgendaNueva) {
     return this.http
       .post<ApiResponse<AgendaNueva & { id: number }>>(this.api, datos)
+      .pipe(map((r) => r.datos));
+  }
+
+  /** Un bloque por cada fecha del rango que caiga en los días elegidos; las que se superponen se omiten. */
+  crearRecurrente(datos: AgendaRecurrente) {
+    return this.http
+      .post<ApiResponse<ResultadoAgendaRecurrente>>(`${this.api}/recurrente`, datos)
       .pipe(map((r) => r.datos));
   }
 

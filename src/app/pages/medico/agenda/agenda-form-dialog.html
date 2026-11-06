@@ -61,6 +61,40 @@
       }
     </mat-form-field>
 
+    @if (!data.bloque) {
+      <mat-slide-toggle formControlName="repetir">Repetir semanalmente</mat-slide-toggle>
+
+      @if (form.controls.repetir.value) {
+        <div class="repeticion">
+          <p class="etiqueta-dias">Días de la semana</p>
+          <mat-button-toggle-group multiple formControlName="dias" aria-label="Días de repetición">
+            @for (d of diasSemana; track d.valor) {
+              <mat-button-toggle [value]="d.valor" [attr.aria-label]="d.nombre">{{ d.letra }}</mat-button-toggle>
+            }
+          </mat-button-toggle-group>
+
+          <mat-form-field>
+            <mat-label>Repetir hasta</mat-label>
+            <input
+              matInput
+              [matDatepicker]="selectorHasta"
+              [min]="form.controls.fecha.value ?? hoy"
+              [max]="maximoRepeticion"
+              formControlName="fecha_hasta"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="selectorHasta" />
+            <mat-datepicker #selectorHasta />
+            <mat-hint>Hasta 92 días desde la fecha de inicio. Los días que se superpongan se omiten.</mat-hint>
+          </mat-form-field>
+          @if (form.hasError('sinDias')) {
+            <p class="error">Elegí al menos un día de la semana</p>
+          } @else if (form.hasError('hastaAnterior')) {
+            <p class="error">La fecha final no puede ser anterior a la de inicio</p>
+          }
+        </div>
+      }
+    }
+
     @if (error(); as e) {
       <p class="error">{{ e }}</p>
     }

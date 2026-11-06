@@ -5,14 +5,13 @@
     </button>
   }
 
-  <a routerLink="/" class="marca" aria-label="Clínica Virtual, ir al inicio">
-    <span class="logo"><mat-icon>medical_services</mat-icon></span>
-    <span class="nombre">Clínica Virtual</span>
+  <a routerLink="/" class="marca" aria-label="IES, Institución de Especialidades en Salud. Ir al inicio">
+    <span class="logo"><img src="logo.svg" alt="" width="18" height="24" /></span>
+    <span class="nombre">
+      <span class="sigla">IES</span>
+      <span class="lema">Institución de Especialidades en Salud</span>
+    </span>
   </a>
-
-  @if (!auth.autenticado()) {
-    <span class="bienvenida">Bienvenido a la clínica virtual</span>
-  }
 
   <span class="espaciador"></span>
 
@@ -53,7 +52,7 @@
         [matTooltip]="'Tipo de usuario: ' + etiquetaRol[u.rol]"
         [attr.aria-label]="'Tipo de usuario: ' + etiquetaRol[u.rol]"
       >
-        <mat-icon>info</mat-icon>
+        <mat-icon>account_circle</mat-icon>
       </button>
     </span>
 
@@ -61,6 +60,8 @@
       <mat-icon>logout</mat-icon>
       <span class="salir-texto">Cerrar sesión</span>
     </button>
+  } @else if (enAcceso()) {
+    <a mat-button routerLink="/" class="acceso volver"><mat-icon>arrow_back</mat-icon> Volver al inicio</a>
   } @else {
     <a mat-button routerLink="/login" class="acceso">Ingresar</a>
     <a mat-flat-button routerLink="/registro" class="acceso-registro">Registrarme</a>

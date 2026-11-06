@@ -2,8 +2,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { RouterOutlet } from '@angular/router';
-import { map } from 'rxjs';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 import { Footer } from './layout/footer/footer';
 import { Header } from './layout/header/header';
@@ -27,7 +27,7 @@ import { Menu } from './layout/menu/menu';
       }
       <mat-sidenav-content class="contenido">
         <main class="principal"><router-outlet /></main>
-        <app-footer />
+        <app-footer [minimo]="enAcceso()" />
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,
@@ -64,6 +64,17 @@ export class App {
     { initialValue: false },
   );
   protected readonly menuAbierto = signal(true);
+
+  private readonly router = inject(Router);
+  private readonly url = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map((e) => e.urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
+  );
+  /** Login y registro usan un pie mínimo para no competir con el formulario. */
+  protected readonly enAcceso = computed(() => /^[/](login|registro)([?]|$)/.test(this.url()));
 
   constructor() {
     // En móvil el menú arranca cerrado; en escritorio, abierto.

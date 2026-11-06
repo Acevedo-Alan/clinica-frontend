@@ -31,9 +31,9 @@ export class TurnoService {
     );
   }
 
-  /** Turnos del paciente autenticado, del más próximo al más lejano. */
-  misTurnos(page: number, pageSize: number) {
-    const params = new HttpParams().set('page', page).set('pageSize', pageSize);
+  /** Turnos del paciente autenticado: próximos (más cercano primero) o historial (más reciente primero). */
+  misTurnos(page: number, pageSize: number, tab: 'proximos' | 'historial') {
+    const params = new HttpParams().set('page', page).set('pageSize', pageSize).set('tab', tab);
     return this.http
       .get<ApiResponse<Paginado<TurnoMio>>>(`${this.api}/mios`, { params })
       .pipe(map((r) => r.datos));

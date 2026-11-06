@@ -1,14 +1,36 @@
-<div class="pagina pagina-angosta">
-  <mat-card class="tarjeta-formulario" appearance="raised">
-    <div class="cabecera">
-      <div class="icono-cabecera"><mat-icon>lock_open</mat-icon></div>
-      <div>
-        <h1>Iniciar sesión</h1>
-        <p>Ingresá con tu DNI y contraseña</p>
+<div class="pantalla">
+  <div class="tarjeta-login">
+    <aside class="lateral" aria-hidden="false">
+      <img
+        class="lateral-foto"
+        src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&h=1100&q=80"
+        alt=""
+        width="900"
+        height="1100"
+        fetchpriority="high"
+      />
+      <div class="lateral-capa"></div>
+      <div class="lateral-contenido">
+        <p class="etiqueta">Portal del paciente</p>
+        <h2>Tu salud, siempre a mano.</h2>
+        <ul class="beneficios">
+          <li><mat-icon>event_available</mat-icon> Sacá y gestioná tus turnos las 24 hs</li>
+          <li><mat-icon>assignment</mat-icon> Consultá tu historial clínico</li>
+          <li><mat-icon>notifications_active</mat-icon> Recibí avisos de tus consultas</li>
+        </ul>
+        <p class="seguridad"><mat-icon>verified_user</mat-icon> Tus datos están protegidos y son confidenciales.</p>
       </div>
-    </div>
+    </aside>
 
-    <mat-card-content>
+    <section class="formulario-caja">
+      <div class="marca">
+        <span class="logo"><img src="logo.svg" alt="" width="18" height="24" /></span>
+        <span class="marca-nombre"><strong>IES</strong> · Institución de Especialidades en Salud</span>
+      </div>
+
+      <h1>Bienvenido/a</h1>
+      <p class="bajada">Ingresá con tu DNI y contraseña para acceder a tu cuenta.</p>
+
       <form [formGroup]="form" (ngSubmit)="enviar()" class="formulario" novalidate>
         @if (registrado()) {
           <div class="aviso-ok" role="status">
@@ -29,18 +51,26 @@
           </div>
         }
 
-        <mat-form-field>
+        <mat-form-field hideRequiredMarker>
           <mat-label>DNI</mat-label>
-          <input matInput formControlName="dni" inputmode="numeric" autocomplete="username" maxlength="8" />
+          <input
+            matInput
+            formControlName="dni"
+            inputmode="numeric"
+            autocomplete="username"
+            maxlength="8"
+            (input)="soloDigitos($event)"
+          />
           <mat-icon matSuffix>badge</mat-icon>
+          <mat-hint>Sin puntos ni espacios</mat-hint>
           @if (form.controls.dni.hasError('required')) {
             <mat-error>El DNI es obligatorio</mat-error>
           } @else if (form.controls.dni.hasError('pattern')) {
-            <mat-error>Ingresá solo números (7 u 8 dígitos)</mat-error>
+            <mat-error>Ingresá 7 u 8 dígitos</mat-error>
           }
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field hideRequiredMarker>
           <mat-label>Contraseña</mat-label>
           <input
             matInput
@@ -62,6 +92,21 @@
           }
         </mat-form-field>
 
+        <div class="olvido">
+          <button type="button" class="enlace" (click)="ayudaClave.set(!ayudaClave())" [attr.aria-expanded]="ayudaClave()">
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
+        @if (ayudaClave()) {
+          <div class="aviso-info" role="note">
+            <mat-icon>support_agent</mat-icon>
+            <span>
+              Para restablecerla, comunicate al <a href="tel:+543424000001">342 400-0001</a> o acercate a cualquier
+              sede con tu DNI.
+            </span>
+          </div>
+        }
+
         <button mat-flat-button type="submit" class="enviar" [disabled]="enviando()">
           @if (enviando()) {
             <mat-spinner diameter="20" />
@@ -70,10 +115,15 @@
           }
         </button>
       </form>
-    </mat-card-content>
 
-    <mat-card-footer class="pie-tarjeta">
-      ¿Todavía no tenés cuenta? <a routerLink="/registro">Registrate</a>
-    </mat-card-footer>
-  </mat-card>
+      <div class="separador"><span>¿Primera vez en la clínica?</span></div>
+      <a mat-stroked-button routerLink="/registro" class="registro">
+        <mat-icon>person_add</mat-icon> Crear mi cuenta
+      </a>
+
+      <p class="ayuda">
+        <mat-icon>call</mat-icon> ¿Necesitás ayuda? Llamanos al <a href="tel:+543424000001">342 400-0001</a>
+      </p>
+    </section>
+  </div>
 </div>

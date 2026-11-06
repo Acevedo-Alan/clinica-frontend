@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +21,6 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -48,6 +46,16 @@ export class Registro {
   protected readonly enviando = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly verPassword = signal(false);
+
+  /** El DNI va sin puntos ni espacios: se descarta todo lo que no sea un dígito mientras se escribe o pega. */
+  protected soloDigitos(evento: Event): void {
+    const campo = evento.target as HTMLInputElement;
+    const limpio = campo.value.replace(/[^0-9]/g, '');
+    if (limpio !== campo.value) {
+      campo.value = limpio;
+      this.form.controls.dni.setValue(limpio);
+    }
+  }
 
   protected readonly form = this.fb.group({
     nombre: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(30)]),
